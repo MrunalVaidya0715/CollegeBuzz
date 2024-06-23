@@ -60,14 +60,14 @@ const Navbar = () => {
                   />
                 </PopoverTrigger>
                 <PopoverContent className="mr-2 translate-y-4 max-w-[250px] ">
-                  <ul className=" w-full flex flex-col gap-2">
+                  <ul className=" w-full flex flex-col">
                     {MenuLinks.map((mLink) => (
                       <Link
                         onClick={() => setIsPopOpen(false)}
                         key={mLink.name}
                         to={mLink.url}
                       >
-                        <li className=" group p-2 text-sm md:text-base font-medium w-full hover:bg-gray-100 flex gap-2 text-gray-400 items-center transition-all duration-200 ease-in-out">
+                        <li className="flex lg:hidden group p-2 text-sm md:text-base font-medium w-full hover:bg-gray-100  gap-2 text-gray-400 items-center transition-all duration-200 ease-in-out">
                           <span className="group-hover:text-gray-800">
                             {mLink.icon}
                           </span>
