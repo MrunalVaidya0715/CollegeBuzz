@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <aside className="w-[25%] hidden lg:flex">
+    <aside className="sticky top-[4.5rem] w-[25%] h-fit hidden lg:flex">
       <ul className="w-full flex flex-col gap-2">
         {MenuLinks.map((link) => (
           <Link key={link.id} to={link.url}>
