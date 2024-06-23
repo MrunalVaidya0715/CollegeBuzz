@@ -1,10 +1,18 @@
-function App() {
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/navbar/Navbar";
+import Home from "./pages/home/Home";
 
+function App() {
   return (
     <>
-      <div className="min-h-dvh flex flex-col items-center justify-center ">
-        <h1 className=" text-4xl font-bold">College<span className=" text-blue-600">Buzz</span></h1>
-      </div>
+      <Router>
+        <Navbar />
+        <main className="wfull min-h-dvh pt-16 flex flex-col items-center justify-between ">
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </main>
+      </Router>
     </>
   );
 }
