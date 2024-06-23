@@ -8,7 +8,7 @@ function App() {
     <>
       <Router>
         <Navbar />
-        <main className="wfull min-h-dvh pt-16 flex flex-col items-center justify-between ">
+        <main className="w-full min-h-dvh flex flex-col items-center justify-between ">
           <Routes>
             <Route path="/" element={<Home />} />
 
