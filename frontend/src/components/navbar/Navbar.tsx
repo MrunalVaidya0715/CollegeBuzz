@@ -4,22 +4,30 @@ import { MdOutlineLogout } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { Button } from "../ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Link } from "react-router-dom";
 import { MenuLinks } from "@/data/links";
-
-
+import Login from "../login/Login";
 
 const Navbar = () => {
-  const user = true;
+  const user = false;
   const [searchText, setSearchText] = useState("");
   const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
   const [isPopOpen, setIsPopOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   return (
     <header className="z-[100] fixed top-0 left-0 h-16 w-screen flex justify-center bg-white border-b-1 border-gray-300 shadow-md">
       <nav className="relative p-2 w-full h-full max-w-[1200px] flex items-center justify-between">
@@ -100,9 +108,28 @@ const Navbar = () => {
               </Popover>
             </div>
           ) : (
-            <Button variant={"outline"}  aria-label="Login">Login</Button>
+            <Button
+              onClick={() => setIsLoginOpen(true)}
+              variant={"outline"}
+              aria-label="Login"
+            >
+              Login
+            </Button>
           )}
         </section>
+        <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
+          <DialogContent className=" max-w-[95%] sm:max-w-[450px] md:max-w-[550px] rounded-lg">
+            <DialogHeader>
+              <DialogTitle className=" text-center">
+                Login to continue
+              </DialogTitle>
+              <DialogDescription className=" text-center">
+                Please log in to continue connecting with your college peers
+              </DialogDescription>
+              <Login/>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </nav>
     </header>
   );
