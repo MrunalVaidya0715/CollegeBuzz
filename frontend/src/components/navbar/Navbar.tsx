@@ -21,7 +21,7 @@ const Navbar = () => {
   };
   const [isPopOpen, setIsPopOpen] = useState(false);
   return (
-    <header className="z-[100] fixed top-0 left-0 h-16 w-full flex justify-center bg-white border-b-1 border-gray-300 shadow-md">
+    <header className="z-[100] fixed top-0 left-0 h-16 w-screen flex justify-center bg-white border-b-1 border-gray-300 shadow-md">
       <nav className="relative p-2 w-full h-full max-w-[1200px] flex items-center justify-between">
         {/* Logo */}
         <Link to={"/"} aria-label="CollegeBuzz Home">
