@@ -1,14 +1,18 @@
-import Section from "@/components/sidebar/Section";
+import Section from "@/components/section/Section";
 import Sidebar from "@/components/sidebar/Sidebar";
+import FilterSort from "@/filter-sort/FilterSort";
 import { Outlet } from "react-router-dom";
 
 const Home = () => {
   return (
     <div className="pt-16 w-full min-h-dvh flex justify-center">
-      <div className="p-2 w-full max-w-[1200px] flex justify-between">
+      <div className="pt-0 lg:pt-4 md:p-2 w-full max-w-[1200px] flex justify-between gap-4">
         <Sidebar />
-        <div className=" overflow-y-auto h-full w-full flex flex-col px-2 scroll-smooth">
-          <Outlet />
+        <div className=" h-auto w-full flex flex-col justify-start gap-1 lg:gap-2  px-2 scroll-smooth">
+          <FilterSort />
+          <div className="flex-1 overflow-y-auto">
+            <Outlet />
+          </div>
         </div>
         <Section />
       </div>
