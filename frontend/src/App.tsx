@@ -3,6 +3,7 @@ import Navbar from "./components/navbar/Navbar";
 import Home from "./pages/home/Home";
 import NotFound from "./pages/not-found/NotFound";
 import Posts from "./pages/posts/Posts";
+import PostDetail from "./pages/PostDetail";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}>
               <Route path="" element={<Posts />} />
+              <Route path="posts/:id" element={<PostDetail />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
