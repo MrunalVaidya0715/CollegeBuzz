@@ -21,7 +21,7 @@ import { MenuLinks } from "@/data/links";
 import Login from "../login/Login";
 
 const Navbar = () => {
-  const user = false;
+  const user = true;
   const [searchText, setSearchText] = useState("");
   const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -55,9 +55,9 @@ const Navbar = () => {
         <section>
           {user ? (
             <div
-              className={`w-[35px] aspect-square border-1 ${
-                isPopOpen ? "border-black" : "border-gray-300"
-              } rounded-full overflow-hidden transition-colors duration-200 ease-in-out`}
+              className={`w-[45px] aspect-square border-1 ${
+                isPopOpen ? "border-gray-200/80" : "border-transparent"
+              } border-[6px]  hover:border-gray-200/50 rounded-full overflow-hidden transition-colors duration-200 ease-in-out`}
             >
               <Popover open={isPopOpen} onOpenChange={setIsPopOpen}>
                 <PopoverTrigger>
@@ -126,7 +126,7 @@ const Navbar = () => {
               <DialogDescription className=" text-center">
                 Please log in to continue connecting with your college peers
               </DialogDescription>
-              <Login/>
+              <Login />
             </DialogHeader>
           </DialogContent>
         </Dialog>
