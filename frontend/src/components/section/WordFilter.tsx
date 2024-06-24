@@ -14,7 +14,7 @@ const WordFilter = () => {
       </TooltipUtil>
       <div className=" flex flex-col items-center gap-2">
         <div className=" flex items-center">
-          <Input className="border-gray-300 rounded-l-md rounded-r-none focus-visible:ring-1" />
+          <Input className="border-gray-200 rounded-l-md rounded-r-none focus-visible:ring-1" />
           <Button
             className=" w-fit aspect-square p-0 bg-blue-600 hover:bg-blue-800 rounded-r-md rounded-l-none"
             aria-label="Add Word"
