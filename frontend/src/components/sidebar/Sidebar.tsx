@@ -1,7 +1,8 @@
 import { MenuLinks } from "@/data/links";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
+  const location = useLocation();
   return (
     <aside className="sticky top-[5rem] w-[30%] h-fit hidden lg:flex">
       <ul className="w-full flex flex-col gap-2">
