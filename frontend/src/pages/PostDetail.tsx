@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Answers from "@/components/answers/Answers";
 
 const PostDetail = () => {
   const [isActionsOpen, setIsActionsOpen] = useState(false);
@@ -90,7 +91,7 @@ const PostDetail = () => {
           <Button disabled variant={"outline"} aria-label="Add Answer">Answer</Button>
         </div>
       </section>
-      
+      <Answers/>
     </div>
   );
 };
