@@ -1,6 +1,7 @@
 import { Button } from "../ui/button";
 import { IoMdAdd } from "react-icons/io";
 import TopQuestions from "./TopQuestions";
+import WordFilter from "./WordFilter";
 const Section = () => {
   return (
     <aside className="sticky top-[5rem] w-[30%] h-fit hidden md:flex flex-col gap-6">
@@ -12,6 +13,7 @@ const Section = () => {
         Ask Question
       </Button>
       <TopQuestions />
+      <WordFilter/>
     </aside>
   );
 };
