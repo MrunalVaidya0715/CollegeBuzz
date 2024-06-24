@@ -11,7 +11,7 @@ import { FilterOptions } from "@/data/links";
 
 const FilterSort = () => {
   return (
-    <section className="z-[50] sticky py-2 top-16 w-full flex items-center bg-gradient-to-b from-white via-white to-[90%] to-white/20 gap-4 ">
+    <section className="z-[50] sticky py-2 lg:pt-4  lg:-translate-y-4 top-16 lg:top-20  w-full flex items-center bg-gradient-to-b from-white via-white to-[90%] to-white/20 gap-4 ">
       {/* Filter */}
       <div className="w-full flex items-center gap-1">
         <div className="p-2 h-10 flex items-center gap-1 bg-white border-1 border-gray-200 rounded-sm">
