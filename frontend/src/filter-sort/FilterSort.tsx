@@ -19,7 +19,7 @@ const FilterSort = () => {
           <p className="hidden lg:block text-sm">Filter</p>
         </div>
         <Select defaultValue="all">
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full" aria-label="Filter Category">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
@@ -38,7 +38,7 @@ const FilterSort = () => {
           <p className="hidden lg:block text-sm">Sort</p>
         </div>
         <Select defaultValue="default">
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full"  aria-label="Sort Posts">
             <SelectValue placeholder="Default" />
           </SelectTrigger>
           <SelectContent>
