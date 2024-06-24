@@ -7,14 +7,14 @@ import { useState } from "react";
 const WordFilter = () => {
   const [isManage, setIsManage] = useState(false);
   return (
-    <section className=" w-full flex flex-col gap-4">
+    <section className=" w-full flex flex-col items-center gap-4">
       <TooltipUtil content="Add Profine Words for filtering and fostering better community">
         <div className=" flex items-center justify-center gap-2">
           <h2 className=" text-center font-medium">Word Filter</h2>
           <BsInfoCircleFill className=" w-4 h-4" />
         </div>
       </TooltipUtil>
-      <div className=" flex flex-col items-center gap-2">
+      <div className="w-full flex flex-col items-center gap-2">
         {isManage ? (
           <div className="w-full max-h-[100px] flex flex-col overflow-y-auto scroll-smooth">
             {Array(6)

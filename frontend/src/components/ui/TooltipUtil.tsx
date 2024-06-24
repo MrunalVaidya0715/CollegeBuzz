@@ -15,7 +15,7 @@ const TooltipUtil = ({ content, children }:TooltipUtilProps) => {
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger>{children}</TooltipTrigger>
+        <TooltipTrigger className=' w-fit'>{children}</TooltipTrigger>
         <TooltipContent>
           <p>{content}</p>
         </TooltipContent>
