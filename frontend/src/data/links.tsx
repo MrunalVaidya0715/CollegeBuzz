@@ -1,7 +1,7 @@
 import { LiaHandsHelpingSolid } from "react-icons/lia";
 
 import { AiOutlineHome } from "react-icons/ai";
-import { MdOutlineExplore } from "react-icons/md";
+import { MdOutlineExplore} from "react-icons/md";
 
 export const MenuLinks = [
   {
@@ -28,46 +28,47 @@ export const FilterOptions = [
   {
     id: 1,
     name: "All",
-    value: "all"
+    value: "all",
   },
   {
     id: 2,
     name: "General",
-    value: "general"
+    value: "general",
   },
   {
     id: 3,
     name: "Technology",
-    value: "technology"
+    value: "technology",
   },
-  
+
   {
     id: 4,
     name: "Career",
-    value: "career"
+    value: "career",
   },
-  
+
   {
     id: 5,
     name: "Sports",
-    value: "sports"
+    value: "sports",
   },
-  
+
   {
     id: 6,
     name: "Faculty",
-    value: "faculty"
+    value: "faculty",
   },
-  
+
   {
     id: 7,
     name: "Canteen",
-    value: "canteen"
+    value: "canteen",
   },
   {
     id: 8,
     name: "Academics",
-    value: "academics"
+    value: "academics",
   },
-
 ];
+
+
