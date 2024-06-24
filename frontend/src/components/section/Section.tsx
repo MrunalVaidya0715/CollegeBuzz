@@ -11,9 +11,7 @@ const Section = () => {
         <IoMdAdd className=" w-5 h-5" />
         Ask Question
       </Button>
-      <section>
-        <TopQuestions/>
-      </section>
+      <TopQuestions />
     </aside>
   );
 };
