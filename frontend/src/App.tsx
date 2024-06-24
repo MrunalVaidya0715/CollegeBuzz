@@ -4,6 +4,7 @@ import Home from "./pages/home/Home";
 import NotFound from "./pages/not-found/NotFound";
 import Posts from "./pages/posts/Posts";
 import PostDetail from "./pages/PostDetail";
+import ScrollToTopOnPageChange from "./lib/utils";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <ScrollToTopOnPageChange/>
         </main>
       </Router>
     </>
