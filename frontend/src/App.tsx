@@ -6,23 +6,27 @@ import Posts from "./pages/posts/Posts";
 import PostDetail from "./pages/PostDetail";
 import ScrollToTopOnPageChange from "./lib/utils";
 import Explore from "./pages/explore/Explore";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   return (
     <>
       <Router>
-        <Navbar />
-        <main className="w-full min-h-dvh flex flex-col items-center justify-between ">
-          <Routes>
-            <Route path="/" element={<Home />}>
-              <Route path="" element={<Posts />} />
-              <Route path="posts/:id" element={<PostDetail />} />
-              <Route path="explore" element={<Explore />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <ScrollToTopOnPageChange/>
-        </main>
+        <GoogleOAuthProvider clientId={clientId}>
+          <Navbar />
+          <main className="w-full min-h-dvh flex flex-col items-center justify-between ">
+            <Routes>
+              <Route path="/" element={<Home />}>
+                <Route path="" element={<Posts />} />
+                <Route path="posts/:id" element={<PostDetail />} />
+                <Route path="explore" element={<Explore />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <ScrollToTopOnPageChange />
+          </main>
+        </GoogleOAuthProvider>
       </Router>
     </>
   );
