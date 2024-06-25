@@ -21,7 +21,7 @@ import { MenuLinks } from "@/data/links";
 import Login from "../login/Login";
 
 const Navbar = () => {
-  const user = true;
+  const user = false;
   const [searchText, setSearchText] = useState("");
   const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
@@ -126,7 +126,7 @@ const Navbar = () => {
               <DialogDescription className=" text-center">
                 Please log in to continue connecting with your college peers
               </DialogDescription>
-              <Login />
+              <Login setIsLoginOpen={setIsLoginOpen} />
             </DialogHeader>
           </DialogContent>
         </Dialog>
