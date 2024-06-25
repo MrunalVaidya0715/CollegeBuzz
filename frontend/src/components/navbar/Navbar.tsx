@@ -16,8 +16,8 @@ import apiRequest from "@/lib/apiRequest";
 import useAuthStore from "@/store/useAuth";
 
 const Navbar = () => {
-  const { getUser, clearUser } = useAuthStore();
-  const user = getUser();
+  const user = useAuthStore((state)=>state.user);
+  const clearUser = useAuthStore((state)=>state.clearUser)
   const [searchText, setSearchText] = useState("");
   const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
