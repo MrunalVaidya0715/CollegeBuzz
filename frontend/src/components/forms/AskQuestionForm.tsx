@@ -89,7 +89,6 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
           embedding: embedResponse.data
         }
       );
-
       console.log(getSimilarQuesResponse.data);
       setStatus("Ask Question");
       setIsAskQuesOpen(false);
