@@ -22,11 +22,13 @@ import { z } from "zod";
 import { CategoriesOptions } from "@/data/categories";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import apiRequest from "@/lib/apiRequest";
+import { useState } from "react";
 const formSchema = z.object({
   title: z
     .string()
     .min(2, { message: "Title required" })
-    .max(50, { message: "Max 50 characters are allowed" }),
+    .max(150, { message: "Max 150 characters are allowed" }),
   branch: z.string().min(1, { message: "Branch is required" }),
   category: z.string().min(1, { message: "Category is required" }),
   description: z
@@ -45,7 +47,8 @@ interface AskQuestionFormProps {
   setIsAskQuesOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AskQuestionForm = ({setIsAskQuesOpen}:AskQuestionFormProps) => {
+const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
+  const [status, setStatus] = useState<string>("Ask Question");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,10 +58,47 @@ const AskQuestionForm = ({setIsAskQuesOpen}:AskQuestionFormProps) => {
       description: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    setIsAskQuesOpen(false);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { title, description } = values;
+    const sanitizedDescription = description.replace(/<[^>]+>/g, "");
+
+    try {
+      setStatus("Embedding Question...");
+      const embedResponse = await apiRequest.post("questions/embed-question", {
+        title,
+        description: sanitizedDescription,
+      });
+
+      // setStatus("Uploading Question...");
+      // const createQuesResponse = await apiRequest.post(
+      //   "questions/create-question",
+      //   {
+      //     title,
+      //     description: sanitizedDescription,
+      //     branch,
+      //     category,
+      //     embedding: embedResponse.data,
+      //   }
+      // );
+      // console.log(createQuesResponse.data)
+
+      setStatus("Finding Similar Question...");
+      const getSimilarQuesResponse = await apiRequest.post(
+        "questions/find-similar-questions",
+        {
+          embedding: embedResponse.data
+        }
+      );
+
+      console.log(getSimilarQuesResponse.data);
+      setStatus("Ask Question");
+      setIsAskQuesOpen(false);
+    } catch (error) {
+      console.error(error);
+      setStatus("Ask Question");
+    }
   }
+
   return (
     <Form {...form}>
       <form
@@ -165,7 +205,7 @@ const AskQuestionForm = ({setIsAskQuesOpen}:AskQuestionFormProps) => {
           type="submit"
           className="mt-4 w-full disabled:opacity-70"
         >
-          Ask Question
+          {status}
         </Button>
       </form>
     </Form>
