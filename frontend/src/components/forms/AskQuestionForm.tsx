@@ -20,7 +20,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CategoriesOptions } from "@/data/categories";
-
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 const formSchema = z.object({
   title: z
     .string()
@@ -28,7 +29,16 @@ const formSchema = z.object({
     .max(50, { message: "Max 50 characters are allowed" }),
   branch: z.string().min(1, { message: "Branch is required" }),
   category: z.string().min(1, { message: "Category is required" }),
-  description: z.string().min(1, { message: "Description is required" }),
+  description: z
+    .string()
+    .min(1, { message: "Description is required" })
+    .refine(
+      (value) => {
+        const strippedHtml = value.replace(/<[^>]+>/g, "");
+        return strippedHtml.trim().length > 0;
+      },
+      { message: "Description is required." }
+    ),
 });
 
 const AskQuestionForm = () => {
@@ -56,7 +66,6 @@ const AskQuestionForm = () => {
           render={({ field }) => (
             <FormItem className="w-full space-y-1">
               <FormLabel>Title</FormLabel>
-              <span className=" text-red-600">*</span>
               <FormControl>
                 <Input placeholder="Question Title" {...field} />
               </FormControl>
@@ -72,7 +81,6 @@ const AskQuestionForm = () => {
             render={({ field }) => (
               <FormItem className=" space-y-1">
                 <FormLabel>Branch</FormLabel>
-                <span className=" text-red-600">*</span>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
@@ -105,7 +113,6 @@ const AskQuestionForm = () => {
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <FormLabel>Category</FormLabel>
-                <span className=" text-red-600">*</span>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
@@ -133,8 +140,26 @@ const AskQuestionForm = () => {
             )}
           />
         </div>
+        {/* Description */}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem className="w-full space-y-1">
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <ReactQuill {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <Button type="submit" className="mt-4 w-full">
+        <Button
+          disabled={!form.formState.isValid || form.formState.isSubmitting}
+          type="submit"
+          className="mt-4 w-full disabled:opacity-70"
+        >
           Ask Question
         </Button>
       </form>
