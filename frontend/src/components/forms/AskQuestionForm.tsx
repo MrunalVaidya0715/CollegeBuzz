@@ -41,7 +41,11 @@ const formSchema = z.object({
     ),
 });
 
-const AskQuestionForm = () => {
+interface AskQuestionFormProps {
+  setIsAddAnsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const AskQuestionForm = ({setIsAddAnsOpen}:AskQuestionFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,6 +57,7 @@ const AskQuestionForm = () => {
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    setIsAddAnsOpen(false);
   }
   return (
     <Form {...form}>

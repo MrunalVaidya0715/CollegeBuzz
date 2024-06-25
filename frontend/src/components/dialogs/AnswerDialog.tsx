@@ -30,7 +30,7 @@ const AnswerDialog = ({ isAddAnsOpen, setIsAddAnsOpen }: AnswerDialogProps) => {
             keep our community safe and sound.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AddAnswer />
+        <AddAnswer setIsAddAnsOpen={setIsAddAnsOpen} />
       </AlertDialogContent>
     </AlertDialog>
   );
