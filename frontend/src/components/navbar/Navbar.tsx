@@ -9,27 +9,29 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MenuLinks } from "@/data/links";
 import LoginDialog from "../dialogs/LoginDialog";
 import apiRequest from "@/lib/apiRequest";
 import useAuthStore from "@/store/useAuth";
 
 const Navbar = () => {
-  const user = useAuthStore((state)=>state.user);
-  const clearUser = useAuthStore((state)=>state.clearUser)
+  const user = useAuthStore((state) => state.user);
+  const clearUser = useAuthStore((state) => state.clearUser);
   const [searchText, setSearchText] = useState("");
   const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
   const [isPopOpen, setIsPopOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       const res = await apiRequest.post("auth/logout");
       if (res.data === "User has been logged out") {
         clearUser();
+        navigate("/");
       }
     } catch (error) {
       alert(error);
