@@ -3,13 +3,6 @@ import { BiSearch } from "react-icons/bi";
 import { MdOutlineLogout } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 import {
   Popover,
@@ -18,7 +11,7 @@ import {
 } from "@/components/ui/popover";
 import { Link } from "react-router-dom";
 import { MenuLinks } from "@/data/links";
-import Login from "../login/Login";
+import LoginDialog from "../dialogs/LoginDialog";
 
 const Navbar = () => {
   const user = false;
@@ -117,19 +110,7 @@ const Navbar = () => {
             </Button>
           )}
         </section>
-        <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
-          <DialogContent className=" max-w-[95%] sm:max-w-[450px] md:max-w-[550px] rounded-lg">
-            <DialogHeader>
-              <DialogTitle className=" text-center">
-                Login to continue
-              </DialogTitle>
-              <DialogDescription className=" text-center">
-                Please log in to continue connecting with your college peers
-              </DialogDescription>
-              <Login setIsLoginOpen={setIsLoginOpen} />
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
+        <LoginDialog isLoginOpen={isLoginOpen} setIsLoginOpen={setIsLoginOpen} />
       </nav>
     </header>
   );
