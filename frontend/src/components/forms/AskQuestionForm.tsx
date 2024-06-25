@@ -1,0 +1,145 @@
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { CategoriesOptions } from "@/data/categories";
+
+const formSchema = z.object({
+  title: z
+    .string()
+    .min(2, { message: "Title required" })
+    .max(50, { message: "Max 50 characters are allowed" }),
+  branch: z.string().min(1, { message: "Branch is required" }),
+  category: z.string().min(1, { message: "Category is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+});
+
+const AskQuestionForm = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      branch: "All",
+      category: "general",
+      description: "",
+    },
+  });
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+  }
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col items-center gap-4"
+      >
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem className="w-full space-y-1">
+              <FormLabel>Title</FormLabel>
+              <span className=" text-red-600">*</span>
+              <FormControl>
+                <Input placeholder="Question Title" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* Branch, Category */}
+        <div className="w-full grid grid-cols-2 items-end sm:items-start gap-3">
+          <FormField
+            control={form.control}
+            name="branch"
+            render={({ field }) => (
+              <FormItem className=" space-y-1">
+                <FormLabel>Branch</FormLabel>
+                <span className=" text-red-600">*</span>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value.toString()}
+                  >
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder="Select Branch"
+                        className="  placeholder:text-gray-400"
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="z-[120]">
+                      <SelectGroup>
+                        <SelectItem value="All">All</SelectItem>
+                        <SelectItem value="CE">CE</SelectItem>
+                        <SelectItem value="CSE">CSE</SelectItem>
+                        <SelectItem value="IT">IT</SelectItem>
+                        <SelectItem value="EXTC">EXTC</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem className="space-y-1">
+                <FormLabel>Category</FormLabel>
+                <span className=" text-red-600">*</span>
+                <FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value.toString()}
+                  >
+                    <SelectTrigger>
+                      <SelectValue
+                        placeholder="Select Category"
+                        className="  placeholder:text-gray-400"
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="z-[120]">
+                      <SelectGroup>
+                        {CategoriesOptions.map((category) => (
+                          <SelectItem key={category.id} value={category.value}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <Button type="submit" className="mt-4 w-full">
+          Ask Question
+        </Button>
+      </form>
+    </Form>
+  );
+};
+
+export default AskQuestionForm;
