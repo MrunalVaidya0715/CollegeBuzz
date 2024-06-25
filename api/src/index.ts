@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from "mongoose";
 
 import authRoute from './routes/auth.route'
+import questionRoute from './routes/question.route'
 
 const app: Express = express();
 dotenv.config();
@@ -37,6 +38,7 @@ app.use(cookieParser());
 
 
 app.use('/api/auth', authRoute)
+app.use('/api/questions', questionRoute)
 
 app.use('/', (req, res, next) => {
     res.send("Reserved for College-Buzz");
