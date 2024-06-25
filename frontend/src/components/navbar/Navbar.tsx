@@ -28,7 +28,6 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       const res = await apiRequest.post("auth/logout");
-      console.log(res)
       if (res.data === "User has been logged out") {
         clearUser();
       }
