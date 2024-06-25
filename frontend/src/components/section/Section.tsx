@@ -4,7 +4,7 @@ import { MdKeyboardArrowLeft } from "react-icons/md";
 import TopQuestions from "./TopQuestions";
 import WordFilter from "./WordFilter";
 import { useState } from "react";
-import AnswerDialog from "../dialogs/QuestionDialog";
+import QuestionDialog from "../dialogs/QuestionDialog";
 const Section = () => {
   const [showSection, setShowSection] = useState(false);
   const [isAskQuesOpen, setIsAskQuesOpen] = useState(false);
@@ -24,7 +24,7 @@ const Section = () => {
         <IoMdAdd className=" w-5 h-5" />
         Ask Question
       </Button>
-      <AnswerDialog isAskQuesOpen={isAskQuesOpen} setIsAskQuesOpen={setIsAskQuesOpen} />
+      <QuestionDialog isAskQuesOpen={isAskQuesOpen} setIsAskQuesOpen={setIsAskQuesOpen} />
       <TopQuestions />
       <WordFilter />
     </aside>
