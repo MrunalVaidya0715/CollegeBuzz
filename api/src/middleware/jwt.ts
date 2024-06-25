@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import createError from "../utils/createError.js";
+import createError from "../utils/createError";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 
-interface CustomRequest extends Request {
+export interface CustomRequest extends Request {
   userId?: string;
   role?: string;
 }
