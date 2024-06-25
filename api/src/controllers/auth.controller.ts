@@ -43,3 +43,14 @@ export const handleGoogleLogin = async (
     next(error);
   }
 };
+
+
+export const logout = async (req: Request, res: Response) => {
+    res
+      .clearCookie("accessToken", {
+        sameSite: "none",
+        secure: true,
+      })
+      .status(200)
+      .send("User has been logged out");
+  };
