@@ -1,4 +1,5 @@
 import apiRequest from "@/lib/apiRequest";
+import useAuthStore from "@/store/useAuth";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import {jwtDecode} from "jwt-decode";
 
@@ -13,6 +14,7 @@ interface DecodedResponse{
   exp: number;
 }
 const Login = ({setIsLoginOpen}:LoginProp) => {
+  const setUser = useAuthStore((state)=>state.setUser)
   const handleGoogleLogin = async (response: CredentialResponse) => {
     try {
       const decodedResponse:DecodedResponse = jwtDecode(response?.credential as string);
@@ -23,8 +25,7 @@ const Login = ({setIsLoginOpen}:LoginProp) => {
         profileImg: picture,
         exp: exp,
       });
-      console.log(res.data)
-      localStorage.setItem("authUser", JSON.stringify(res.data));
+      setUser(res.data);
       setIsLoginOpen(false);
       alert("Logged IN")
     } catch (error) {
