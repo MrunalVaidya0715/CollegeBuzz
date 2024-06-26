@@ -10,7 +10,7 @@ interface PostCardProps{
 const PostCard = ({post}:PostCardProps) => {
   const vote = post.upvote - post.downvote
   return (
-    <Link to={"/posts/123"}>
+    <Link to={`/posts/${post._id}`}>
       <section className="px-4 py-2 w-full  flex gap-3 bg-white border-1 border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-300 ease-in-out">
         {/* Upvotes */}
         <div className="px-1 flex flex-col items-center gap-1">
