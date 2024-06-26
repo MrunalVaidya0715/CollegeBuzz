@@ -6,9 +6,10 @@ import WordFilter from "./WordFilter";
 import { useState } from "react";
 import QuestionDialog from "../dialogs/QuestionDialog";
 import useAuthStore from "@/store/useAuth";
+import useDialogStore from "@/store/useDialogStore";
 const Section = () => {
   const user = useAuthStore((state) => state.user);
-  const setIsLoginOpen = useAuthStore((state) => state.setIsLoginOpen);
+  const setIsLoginOpen = useDialogStore((state) => state.setIsLoginOpen);
   const [showSection, setShowSection] = useState(false);
   const [isAskQuesOpen, setIsAskQuesOpen] = useState(false);
   const handleAskQuestion = () => {
