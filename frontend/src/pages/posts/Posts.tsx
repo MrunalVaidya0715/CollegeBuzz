@@ -27,8 +27,8 @@ export interface Post {
   reportedBy: string[];
   answers: string[];
   embedding?: number[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const Posts = () => {
@@ -56,7 +56,7 @@ const Posts = () => {
       ) : posts?.length === 0 ? (
         <NoData message="No Questions at the moment" />
       ) : (
-        posts?.map((post) => <PostCard key={post._id} />)
+        posts?.map((post) => <PostCard key={post._id} post={post} />)
       )}
     </div>
   );
