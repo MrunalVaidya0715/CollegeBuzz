@@ -24,7 +24,7 @@ export const getSimilarQuestions = async (
   next: NextFunction
 ) => {
   try {
-    const { embedding, limit = 3, threshold = 0.80 } = req.body;
+    const { embedding, limit = 3, threshold = 0.8 } = req.body;
     const numCandidates = limit * 10;
     const similarQuestions = await Question.aggregate([
       {
@@ -44,11 +44,11 @@ export const getSimilarQuestions = async (
           score: { $meta: "vectorSearchScore" },
         },
       },
-        {
-          $match: {
-            score: { $gt: threshold },
-          },
+      {
+        $match: {
+          score: { $gt: threshold },
         },
+      },
     ]);
 
     res.status(200).send(similarQuestions);
@@ -77,6 +77,19 @@ export const createQuestion = async (
     res
       .status(201)
       .send({ message: "Question has been uploaded", question: savedQuestion });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getQuestions = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const questions = await Question.find();
+    res.status(200).send(questions);
   } catch (error) {
     next(error);
   }
