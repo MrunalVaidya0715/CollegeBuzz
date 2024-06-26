@@ -9,6 +9,7 @@ interface PostCardProps{
 
 const PostCard = ({post}:PostCardProps) => {
   const vote = post.upvote - post.downvote
+  const sanitizedDescription = post.description.replace(/<[^>]+>/g, "");
   return (
     <Link to={`/posts/${post._id}`}>
       <section className="px-4 py-2 w-full  flex gap-3 bg-white border-1 border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-300 ease-in-out">
@@ -32,7 +33,7 @@ const PostCard = ({post}:PostCardProps) => {
           {/* Description */}
           <div>
             <p className=" line-clamp-2 text-gray-800">
-             {post.description}
+             {sanitizedDescription}
             </p>
           </div>
           {/* User */}
