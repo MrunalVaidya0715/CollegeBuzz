@@ -14,6 +14,7 @@ import { MenuLinks } from "@/data/links";
 import LoginDialog from "../dialogs/LoginDialog";
 import apiRequest from "@/lib/apiRequest";
 import useAuthStore from "@/store/useAuth";
+import { useToast } from "../ui/use-toast";
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
@@ -25,16 +26,23 @@ const Navbar = () => {
   const [isPopOpen, setIsPopOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const navigate = useNavigate();
-
+  const { toast } = useToast();
   const handleLogout = async () => {
     try {
       const res = await apiRequest.post("auth/logout");
       if (res.data === "User has been logged out") {
         clearUser();
         navigate("/");
+        toast({ title: "Logged Out Successfully!" });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Something went wrong!",
+          description: "Try Again",
+        });
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
   return (
