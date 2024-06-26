@@ -58,13 +58,6 @@ const Posts = () => {
       ) : (
         posts?.map((post) => <PostCard key={post._id} />)
       )}
-
-      {}
-      {Array(20)
-        .fill(null)
-        .map((_, index) => (
-          <PostCard key={index} />
-        ))}
     </div>
   );
 };
