@@ -49,5 +49,5 @@ app.use('/', (req, res, next) => {
 const port = process.env.PORT || 8800;
 app.listen(port, () => {
     connect();
-    console.log(`[server]: Dapper-Street Backend Server is Running at ${port}`);
+    console.log(`[server]: College-Buzzz Backend Server is Running at ${port}`);
 });
