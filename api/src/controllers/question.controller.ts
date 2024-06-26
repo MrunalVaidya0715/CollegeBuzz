@@ -88,7 +88,7 @@ export const getQuestions = async (
   next: NextFunction
 ) => {
   try {
-    const questions = await Question.find().select("-embedding");
+    const questions = await Question.find().select("-embedding").populate(["userId"]);
     res.status(200).send(questions);
   } catch (error) {
     next(error);
