@@ -1,11 +1,12 @@
 import { BgColors, CategoriesOptions } from "@/data/categories";
-import { type ClassValue, clsx } from "clsx"
+import { type ClassValue, clsx } from "clsx";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { twMerge } from "tailwind-merge"
+import { twMerge } from "tailwind-merge";
+import  {formatDistanceToNow} from "date-fns"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 const scrollToTop = () => {
@@ -28,6 +29,12 @@ const ScrollToTopOnPageChange = () => {
 export default ScrollToTopOnPageChange;
 
 export const getColor = (value: string) => {
-  const index = CategoriesOptions.findIndex(option => option.value === value);
+  const index = CategoriesOptions.findIndex((option) => option.value === value);
   return BgColors[index % BgColors.length];
+};
+
+export const TimeAgo = ( timestamp:string) => {
+  const timeAgo = formatDistanceToNow(new Date(timestamp), { addSuffix: true });
+
+  return timeAgo;
 };
