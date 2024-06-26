@@ -11,7 +11,7 @@ import AddAnswer from "../forms/AskQuestionForm";
 
 interface QuestionDialogProps {
   isAskQuesOpen: boolean;
-  setIsAskQuesOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAskQuesOpen: (arg:boolean)=>void;
 }
 
 const QuestionDialog = ({ isAskQuesOpen, setIsAskQuesOpen }: QuestionDialogProps) => {

@@ -24,6 +24,10 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import apiRequest from "@/lib/apiRequest";
 import { useState } from "react";
+import SimilarQuestionsDrawer, {
+  SimilarQues,
+} from "../dialogs/SimilarQuestionsDrawer";
+import useDialogStore from "@/store/useDialogStore";
 const formSchema = z.object({
   title: z
     .string()
@@ -44,11 +48,15 @@ const formSchema = z.object({
 });
 
 interface AskQuestionFormProps {
-  setIsAskQuesOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAskQuesOpen: (arg: boolean) => void;
 }
 
 const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
+  const [similarQuestions, setSimilarQuestions] = useState<SimilarQues[] | []>(
+    []
+  );
   const [status, setStatus] = useState<string>("Ask Question");
+  const setDrawerOpen = useDialogStore((state) => state.setIsDrawerOpen);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -86,12 +94,16 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
       const getSimilarQuesResponse = await apiRequest.post(
         "questions/find-similar-questions",
         {
-          embedding: embedResponse.data
+          embedding: embedResponse.data,
         }
       );
-      console.log(getSimilarQuesResponse.data);
+      setSimilarQuestions(getSimilarQuesResponse.data);
+      if (getSimilarQuesResponse.data.length > 0) {
+        setDrawerOpen(true);
+      }
+
       setStatus("Ask Question");
-      setIsAskQuesOpen(false);
+      setIsAskQuesOpen(true);
     } catch (error) {
       console.error(error);
       setStatus("Ask Question");
@@ -99,115 +111,121 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col items-center gap-4"
-      >
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem className="w-full space-y-1">
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Question Title" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {/* Branch, Category */}
-        <div className="w-full grid grid-cols-2 items-end sm:items-start gap-3">
-          <FormField
-            control={form.control}
-            name="branch"
-            render={({ field }) => (
-              <FormItem className=" space-y-1">
-                <FormLabel>Branch</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value.toString()}
-                  >
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder="Select Branch"
-                        className="  placeholder:text-gray-400"
-                      />
-                    </SelectTrigger>
-                    <SelectContent className="z-[120]">
-                      <SelectGroup>
-                        <SelectItem value="All">All</SelectItem>
-                        <SelectItem value="CE">CE</SelectItem>
-                        <SelectItem value="CSE">CSE</SelectItem>
-                        <SelectItem value="IT">IT</SelectItem>
-                        <SelectItem value="EXTC">EXTC</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem className="space-y-1">
-                <FormLabel>Category</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value.toString()}
-                  >
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder="Select Category"
-                        className="  placeholder:text-gray-400"
-                      />
-                    </SelectTrigger>
-                    <SelectContent className="z-[120]">
-                      <SelectGroup>
-                        {CategoriesOptions.map((category) => (
-                          <SelectItem key={category.id} value={category.value}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        {/* Description */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem className="w-full space-y-1">
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <ReactQuill {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button
-          disabled={!form.formState.isValid || form.formState.isSubmitting}
-          type="submit"
-          className="mt-4 w-full disabled:opacity-70"
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col items-center gap-4"
         >
-          {status}
-        </Button>
-      </form>
-    </Form>
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem className="w-full space-y-1">
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Question Title" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/* Branch, Category */}
+          <div className="w-full grid grid-cols-2 items-end sm:items-start gap-3">
+            <FormField
+              control={form.control}
+              name="branch"
+              render={({ field }) => (
+                <FormItem className=" space-y-1">
+                  <FormLabel>Branch</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value.toString()}
+                    >
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder="Select Branch"
+                          className="  placeholder:text-gray-400"
+                        />
+                      </SelectTrigger>
+                      <SelectContent className="z-[120]">
+                        <SelectGroup>
+                          <SelectItem value="All">All</SelectItem>
+                          <SelectItem value="CE">CE</SelectItem>
+                          <SelectItem value="CSE">CSE</SelectItem>
+                          <SelectItem value="IT">IT</SelectItem>
+                          <SelectItem value="EXTC">EXTC</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value.toString()}
+                    >
+                      <SelectTrigger>
+                        <SelectValue
+                          placeholder="Select Category"
+                          className="  placeholder:text-gray-400"
+                        />
+                      </SelectTrigger>
+                      <SelectContent className="z-[120]">
+                        <SelectGroup>
+                          {CategoriesOptions.map((category) => (
+                            <SelectItem
+                              key={category.id}
+                              value={category.value}
+                            >
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          {/* Description */}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem className="w-full space-y-1">
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <ReactQuill {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button
+            disabled={!form.formState.isValid || form.formState.isSubmitting}
+            type="submit"
+            className="mt-4 w-full disabled:opacity-70"
+          >
+            {status}
+          </Button>
+        </form>
+      </Form>
+      <SimilarQuestionsDrawer similarQues={similarQuestions} />
+    </>
   );
 };
 

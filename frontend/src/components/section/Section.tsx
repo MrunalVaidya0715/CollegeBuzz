@@ -11,7 +11,8 @@ const Section = () => {
   const user = useAuthStore((state) => state.user);
   const setIsLoginOpen = useDialogStore((state) => state.setIsLoginOpen);
   const [showSection, setShowSection] = useState(false);
-  const [isAskQuesOpen, setIsAskQuesOpen] = useState(false);
+  const isAskQuesOpen = useDialogStore((state) => state.isAskQuesOpen);
+  const setIsAskQuesOpen = useDialogStore((state) => state.setIsAskQuesOpen);
   const handleAskQuestion = () => {
     if (!user) {
       setIsLoginOpen(true);
@@ -52,6 +53,7 @@ const Section = () => {
         isAskQuesOpen={isAskQuesOpen}
         setIsAskQuesOpen={setIsAskQuesOpen}
       />
+
       <TopQuestions />
       <WordFilter />
     </aside>
