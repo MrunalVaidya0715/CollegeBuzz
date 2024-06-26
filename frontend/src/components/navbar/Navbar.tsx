@@ -15,11 +15,12 @@ import LoginDialog from "../dialogs/LoginDialog";
 import apiRequest from "@/lib/apiRequest";
 import useAuthStore from "@/store/useAuth";
 import { useToast } from "../ui/use-toast";
+import useDialogStore from "@/store/useDialogStore";
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
-  const isLoginOpen = useAuthStore((state)=>state.isLoginOpen);
-  const setIsLoginOpen = useAuthStore((state)=>state.setIsLoginOpen);
+  const isLoginOpen = useDialogStore((state)=>state.isLoginOpen);
+  const setIsLoginOpen = useDialogStore((state)=>state.setIsLoginOpen);
   const clearUser = useAuthStore((state) => state.clearUser);
   const [searchText, setSearchText] = useState("");
   const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {

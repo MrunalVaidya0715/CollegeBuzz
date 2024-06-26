@@ -7,8 +7,6 @@ interface AuthState {
   setUser: (user: User) => void;
   clearUser: () => void;
   getUser: () => User | null;
-  isLoginOpen: boolean;
-  setIsLoginOpen: (isOpen: boolean) => void;
 }
 
 const useAuthStore = create<AuthState>()(
@@ -17,9 +15,7 @@ const useAuthStore = create<AuthState>()(
       user: null,
       setUser: (user) => set({ user }),
       clearUser: () => set({ user: null }),
-      getUser: () => get().user,
-      isLoginOpen: false,
-      setIsLoginOpen: (isOpen) => set({ isLoginOpen: isOpen }),
+      getUser: () => get().user
     }),
     {
       name: "auth-storage",
