@@ -8,16 +8,15 @@ interface PostCardProps{
 }
 
 const PostCard = ({post}:PostCardProps) => {
-  const diffVote = post.upvote - post.downvote
-  const totalVote = diffVote  < 0 ? (diffVote) * - 1 : diffVote
+  const vote = post.upvote - post.downvote + 5
   return (
     <Link to={"/posts/123"}>
       <section className="px-4 py-2 w-full  flex gap-3 bg-white border-1 border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-300 ease-in-out">
         {/* Upvotes */}
         <div className="px-1 flex flex-col items-center gap-1">
-          <MdArrowUpward className=" w-5 h-5 text-gray-400" />
-          <p className=" font-bold text-sm">{totalVote}</p>
-          <MdArrowDownward className=" w-5 h-5 text-gray-400" />
+          <MdArrowUpward className={` w-5 h-5 ${vote > 0 ? "text-blue-500":"text-gray-400"}`} />
+          <p className={`font-bold text-sm ${vote > 0 ? "text-blue-600": vote < 0 ? "text-red-600":"text-gray-400"}`}>{vote > 0 ? vote : (vote * -1)}</p>
+          <MdArrowDownward className={` w-5 h-5 ${vote < 0 ?" text-red-500":"text-gray-400"}`} />
         </div>
         {/* Details */}
         <div className=" w-full flex flex-col gap-2 justify-between">
@@ -46,12 +45,12 @@ const PostCard = ({post}:PostCardProps) => {
                   alt={post.userId.username}
                 />
               </div>
-              <h3 className=" text-blue-500 text-sm font-medium">
+              <h3 className="hidden sm:block text-blue-500 text-sm font-medium">
                 {post.userId.username}
               </h3>
             </div>
             <MdCircle className=" w-2 h-2 text-gray-300" />
-            <p className=" text-gray-500 text-sm">{TimeAgo(post.createdAt)}</p>
+            <p className=" text-gray-500 text-sm sm:text-sm">{TimeAgo(post.createdAt)}</p>
           </div>
         </div>
       </section>
