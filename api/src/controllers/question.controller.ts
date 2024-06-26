@@ -83,12 +83,12 @@ export const createQuestion = async (
 };
 
 export const getQuestions = async (
-  req: CustomRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const questions = await Question.find().select("-embedding").populate(["userId"]);
+    const questions = await Question.find().select("-embedding").populate("userId");
     res.status(200).send(questions);
   } catch (error) {
     next(error);
