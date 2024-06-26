@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import createEmbedding from "../utils/createEmbedding";
 import Question from "../models/question.model";
 import { CustomRequest } from "../middleware/jwt";
+import createError from "../utils/createError";
+import mongoose from "mongoose";
 
 export const embedQuestion = async (
   req: Request,
@@ -94,3 +96,25 @@ export const getQuestions = async (
     next(error);
   }
 };
+
+export const getQuestionById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const quesId = req.params.id;
+    if(!mongoose.Types.ObjectId.isValid(quesId)){
+      return next(createError(404, "Question not found"));
+    }
+    const question = await Question.findById(quesId).select("-embedding").populate("userId");
+    if(!question){
+      return next(createError(404, "Question not found"));
+    }
+    res.status(200).send(question)
+  } catch (error) {
+    next(error);
+  }
+};
+
+
