@@ -13,7 +13,7 @@ import { useLocation } from "react-router-dom";
 const FilterSort = () => {
   const location = useLocation();
   return (
-    <section className={`z-[50] ${location.pathname === "/" || location.pathname === "/contribute" ? "":"hidden"} sticky py-2 lg:pt-4  lg:-translate-y-4 top-16 lg:top-20  w-full flex items-center bg-gradient-to-b from-[#f1f5f9] via-[#f1f5f9] to-[90%] to-white/20 gap-4`}>
+    <section className={`z-[50] ${location.pathname === "/" || location.pathname === "/contribute" ? "":"hidden"} sticky py-2 lg:pt-4  lg:-translate-y-4 top-16 lg:top-20  w-full flex items-center bg-gradient-to-b from-[#f1f5f9] via-[#f1f5f9] to-[90%] to-white/20 gap-2`}>
       {/* Filter */}
       <div className="w-full flex items-center gap-1">
         <div className="p-2 h-10 flex items-center gap-1 bg-white border-1 border-gray-200 rounded-sm">
