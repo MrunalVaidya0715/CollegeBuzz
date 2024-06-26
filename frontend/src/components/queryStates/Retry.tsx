@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 interface RetryProps{
-    refetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<unknown[], Error>>
+    refetch: (options?: RefetchOptions | undefined) => Promise<QueryObserverResult<unknown[] | unknown, Error>>
 }
 
 const Retry = ({refetch}:RetryProps) => {
