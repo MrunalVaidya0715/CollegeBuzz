@@ -7,12 +7,12 @@ import {
 } from "@/components/ui/dialog";
 import Login from "../login/Login";
 
-interface LoginDialogProps{
-    isLoginOpen: boolean;
-    setIsLoginOpen: React.Dispatch<React.SetStateAction<boolean>>
+interface LoginDialogProps {
+  isLoginOpen: boolean;
+  setIsLoginOpen: (arg: boolean) => void;
 }
 
-const LoginDialog = ({ isLoginOpen, setIsLoginOpen}:LoginDialogProps) => {
+const LoginDialog = ({ isLoginOpen, setIsLoginOpen }: LoginDialogProps) => {
   return (
     <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
       <DialogContent className=" max-w-[95%] sm:max-w-[450px] md:max-w-[550px] min-h-[250px] rounded-lg">
@@ -22,7 +22,7 @@ const LoginDialog = ({ isLoginOpen, setIsLoginOpen}:LoginDialogProps) => {
             Please log in to continue connecting with your college peers
           </DialogDescription>
           <div className=" h-full flex flex-col justify-center">
-          <Login setIsLoginOpen={setIsLoginOpen} />
+            <Login setIsLoginOpen={setIsLoginOpen} />
           </div>
         </DialogHeader>
       </DialogContent>

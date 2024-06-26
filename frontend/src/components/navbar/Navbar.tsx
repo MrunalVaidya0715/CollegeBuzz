@@ -18,13 +18,14 @@ import { useToast } from "../ui/use-toast";
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
+  const isLoginOpen = useAuthStore((state)=>state.isLoginOpen);
+  const setIsLoginOpen = useAuthStore((state)=>state.setIsLoginOpen);
   const clearUser = useAuthStore((state) => state.clearUser);
   const [searchText, setSearchText] = useState("");
   const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
   const [isPopOpen, setIsPopOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const handleLogout = async () => {

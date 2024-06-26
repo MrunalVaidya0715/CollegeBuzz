@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useToast } from "../ui/use-toast";
 
 interface LoginProp {
-  setIsLoginOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoginOpen: (arg: boolean) => void;
 }
 
 interface DecodedResponse {
