@@ -47,6 +47,8 @@ const formSchema = z.object({
     ),
 });
 
+export type FormSchema = z.infer<typeof formSchema>;
+
 interface AskQuestionFormProps {
   setIsAskQuesOpen: (arg: boolean) => void;
 }
@@ -55,6 +57,7 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
   const [similarQuestions, setSimilarQuestions] = useState<SimilarQues[] | []>(
     []
   );
+  const [embeddedResponse, setEmbeddedResponse] = useState<number[]>([]);
   const [status, setStatus] = useState<string>("Ask Question");
   const setDrawerOpen = useDialogStore((state) => state.setIsDrawerOpen);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -66,29 +69,38 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
       description: "",
     },
   });
+  const handleCreateQuestion = async (
+    values: FormSchema,
+    embedding: number[]
+  ) => {
+    const { title, description, branch, category } = values;
+    try {
+      setStatus("Asking Question...");
+      await apiRequest.post("questions/create-question", {
+        title,
+        description,
+        branch,
+        category,
+        embedding,
+      });
+      setStatus("Ask Question");
+      setIsAskQuesOpen(false);
+    } catch (error) {
+      console.error(error);
+      setStatus("Ask Question");
+    }
+  };
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { title, description } = values;
     const sanitizedDescription = description.replace(/<[^>]+>/g, "");
 
     try {
-      setStatus("Embedding Question...");
+      setStatus("Uploading Question...");
       const embedResponse = await apiRequest.post("questions/embed-question", {
         title,
         description: sanitizedDescription,
       });
-
-      // setStatus("Uploading Question...");
-      // const createQuesResponse = await apiRequest.post(
-      //   "questions/create-question",
-      //   {
-      //     title,
-      //     description: description,
-      //     branch,
-      //     category,
-      //     embedding: embedResponse.data,
-      //   }
-      // );
-      // console.log(createQuesResponse.data)
+      setEmbeddedResponse(embedResponse.data);
 
       setStatus("Finding Similar Question...");
       const getSimilarQuesResponse = await apiRequest.post(
@@ -100,10 +112,13 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
       setSimilarQuestions(getSimilarQuesResponse.data);
       if (getSimilarQuesResponse.data.length > 0) {
         setDrawerOpen(true);
+      } 
+      else {
+        await handleCreateQuestion(values, embedResponse.data);
+        setIsAskQuesOpen(false);
       }
 
       setStatus("Ask Question");
-      setIsAskQuesOpen(true);
     } catch (error) {
       console.error(error);
       setStatus("Ask Question");
@@ -224,7 +239,13 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
           </Button>
         </form>
       </Form>
-      <SimilarQuestionsDrawer similarQues={similarQuestions} />
+      <SimilarQuestionsDrawer
+        similarQues={similarQuestions}
+        onAskQuestion={() => {
+          handleCreateQuestion(form.getValues(), embeddedResponse);
+          setIsAskQuesOpen(true);
+        }}
+      />
     </>
   );
 };

@@ -19,9 +19,11 @@ export interface SimilarQues {
 
 interface SimilarQuesDrawerProps {
   similarQues: SimilarQues[];
+  onAskQuestion: () => void;
 }
 
-const SimilarQuestionsDrawer = ({ similarQues }: SimilarQuesDrawerProps) => {
+
+const SimilarQuestionsDrawer = ({ similarQues, onAskQuestion }: SimilarQuesDrawerProps) => {
   const isDrawerOpen = useDialogStore((state) => state.isDrawerOpen);
   const setDrawerOpen = useDialogStore((state) => state.setIsDrawerOpen);
   const setIsAskOpen = useDialogStore((state) => state.setIsAskQuesOpen);
@@ -46,7 +48,7 @@ const SimilarQuestionsDrawer = ({ similarQues }: SimilarQuesDrawerProps) => {
                 navigate(`/posts/${ques._id}`);
               }}
               key={ques._id}
-              className="relative cursor-pointer pt-6 p-4 flex gap-2 border-1 border-gray-300"
+              className="relative cursor-pointer pt-6 p-4 flex gap-2 border-1 border-gray-300 hover:border-gray-800"
             >
               <div className=" font-medium">{index + 1}.</div>
               <div className="  flex flex-col gap-2">
@@ -61,6 +63,7 @@ const SimilarQuestionsDrawer = ({ similarQues }: SimilarQuesDrawerProps) => {
         <DrawerFooter className=" w-full grid grid-cols-1 md:grid-cols-2">
           <Button
             onClick={() => {
+              onAskQuestion();
               setDrawerOpen(false);
             }}
           >
