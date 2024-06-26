@@ -74,7 +74,7 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
       //   "questions/create-question",
       //   {
       //     title,
-      //     description: sanitizedDescription,
+      //     description: description,
       //     branch,
       //     category,
       //     embedding: embedResponse.data,
