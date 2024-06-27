@@ -28,6 +28,7 @@ import SimilarQuestionsDrawer, {
   SimilarQues,
 } from "../dialogs/SimilarQuestionsDrawer";
 import useDialogStore from "@/store/useDialogStore";
+import { useToast } from "../ui/use-toast";
 const formSchema = z.object({
   title: z
     .string()
@@ -60,6 +61,7 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
   const [embeddedResponse, setEmbeddedResponse] = useState<number[]>([]);
   const [status, setStatus] = useState<string>("Ask Question");
   const setDrawerOpen = useDialogStore((state) => state.setIsDrawerOpen);
+  const {toast} = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -85,7 +87,9 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
       });
       setStatus("Ask Question");
       setIsAskQuesOpen(false);
+      toast({title:"Question uploaded Successfully"})
     } catch (error) {
+      toast({variant:"destructive",title:"Question not uploaded", description:"Please try again!"})
       console.error(error);
       setStatus("Ask Question");
     }
@@ -120,6 +124,7 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
 
       setStatus("Ask Question");
     } catch (error) {
+      toast({variant:"destructive",title:"Something went wrong", description:"Please try again!"})
       console.error(error);
       setStatus("Ask Question");
     }
