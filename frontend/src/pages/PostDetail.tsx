@@ -128,9 +128,9 @@ const PostDetail = () => {
             <h1 className=" text-lg font-[600]">{post?.title}</h1>
           </div>
           {/* Description */}
-          <div className="p-2 border-1 border-gray-200  ">
+          <div className="w-full p-2 border-1 border-gray-200  ">
             <div
-              className="prose -space-y-0  prose-h1:text-2xl prose-h1:font-bold prose-h2:text-xl prose-h2:font-semibold prose-h3:text-lg prose-h3:font-medium prose-a:text-sm prose-a:text-blue-500 prose-a:hover:text-blue-800 prose-a:hover:underline "
+              className="w-full max-w-full prose leading-6 -space-y-0  prose-h1:text-2xl prose-h1:font-bold prose-h2:text-xl prose-h2:font-semibold prose-h3:text-lg prose-h3:font-medium prose-a:text-sm prose-a:text-blue-500 prose-a:hover:text-blue-800 prose-a:hover:underline "
               dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
             ></div>
           </div>
