@@ -29,6 +29,8 @@ import SimilarQuestionsDrawer, {
 } from "../dialogs/SimilarQuestionsDrawer";
 import useDialogStore from "@/store/useDialogStore";
 import { useToast } from "../ui/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 const formSchema = z.object({
   title: z
     .string()
@@ -55,13 +57,15 @@ interface AskQuestionFormProps {
 }
 
 const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
+  const queryClient = useQueryClient();
   const [similarQuestions, setSimilarQuestions] = useState<SimilarQues[] | []>(
     []
   );
   const [embeddedResponse, setEmbeddedResponse] = useState<number[]>([]);
   const [status, setStatus] = useState<string>("Ask Question");
   const setDrawerOpen = useDialogStore((state) => state.setIsDrawerOpen);
-  const {toast} = useToast();
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,11 +75,9 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
       description: "",
     },
   });
-  const handleCreateQuestion = async (
-    values: FormSchema,
-    embedding: number[]
-  ) => {
-    const { title, description, branch, category } = values;
+
+  const handleCreateQuestion = async (data: { values: FormSchema; embedding: number[] }) => {
+    const { title, description, branch, category } = data.values;
     try {
       setStatus("Asking Question...");
       await apiRequest.post("questions/create-question", {
@@ -83,17 +85,31 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
         description,
         branch,
         category,
-        embedding,
+        embedding: data.embedding,
       });
       setStatus("Ask Question");
       setIsAskQuesOpen(false);
-      toast({title:"Question uploaded Successfully"})
+      toast({ title: "Question uploaded successfully" });
     } catch (error) {
-      toast({variant:"destructive",title:"Question not uploaded", description:"Please try again!"})
+      toast({ variant: "destructive", title: "Question not uploaded", description: "Please try again!" });
       console.error(error);
       setStatus("Ask Question");
     }
   };
+
+  const questionMutation = useMutation({
+    mutationFn: (data: { values: FormSchema; embedding: number[] }) => handleCreateQuestion(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      setIsAskQuesOpen(false);
+      toast({ title: "Question uploaded successfully" });
+    },
+    onError: () => {
+      toast({ variant: "destructive", title: "Question not uploaded", description: "Please try again!" });
+      setStatus("Ask Question");
+    },
+  });
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { title, description } = values;
     const sanitizedDescription = description.replace(/<[^>]+>/g, "");
@@ -116,15 +132,13 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
       setSimilarQuestions(getSimilarQuesResponse.data);
       if (getSimilarQuesResponse.data.length > 0) {
         setDrawerOpen(true);
-      } 
-      else {
-        await handleCreateQuestion(values, embedResponse.data);
-        setIsAskQuesOpen(false);
+      } else {
+        questionMutation.mutate({ values, embedding: embedResponse.data });
       }
 
       setStatus("Ask Question");
     } catch (error) {
-      toast({variant:"destructive",title:"Something went wrong", description:"Please try again!"})
+      toast({ variant: "destructive", title: "Something went wrong", description: "Please try again!" });
       console.error(error);
       setStatus("Ask Question");
     }
@@ -247,7 +261,7 @@ const AskQuestionForm = ({ setIsAskQuesOpen }: AskQuestionFormProps) => {
       <SimilarQuestionsDrawer
         similarQues={similarQuestions}
         onAskQuestion={() => {
-          handleCreateQuestion(form.getValues(), embeddedResponse);
+          questionMutation.mutate({ values: form.getValues(), embedding: embeddedResponse });
           setIsAskQuesOpen(true);
         }}
       />
