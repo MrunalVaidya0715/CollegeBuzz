@@ -17,6 +17,7 @@ import PostDetailSkeleton from "@/skeletons/PostDetailSkeleton";
 import Retry from "@/components/queryStates/Retry";
 import { TimeAgo, getColor } from "@/lib/utils";
 import useAuthStore from "@/store/useAuth";
+import DOMPurify from "dompurify";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -36,6 +37,11 @@ const PostDetail = () => {
   });
   const vote = (post?.upvote || 0) - (post?.upvote || 0);
   const [isActionsOpen, setIsActionsOpen] = useState(false);
+
+  const sanitizedDescription = DOMPurify.sanitize(
+    post?.description || ""
+  );
+
   return (
     <div className="pt-2 w-full flex flex-col gap-4">
       {isLoading || isRefetching ? (
@@ -122,8 +128,11 @@ const PostDetail = () => {
             <h1 className=" text-lg font-[600]">{post?.title}</h1>
           </div>
           {/* Description */}
-          <div className="p-2 border-1 border-gray-200">
-            <p className=" text-gray-800">{post?.description}</p>
+          <div className="p-2 border-1 border-gray-200  ">
+            <div
+              className="prose -space-y-0  prose-h1:text-2xl prose-h1:font-bold prose-h2:text-xl prose-h2:font-semibold prose-h3:text-lg prose-h3:font-medium prose-a:text-sm prose-a:text-blue-500 prose-a:hover:text-blue-800 prose-a:hover:underline "
+              dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
+            ></div>
           </div>
           {/* Upvote and Answer */}
           <div className="mt-2 w-full flex items-center justify-between gap-2">
