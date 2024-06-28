@@ -1,9 +1,9 @@
 import { TimeAgo, getColor } from "@/lib/utils";
 import { Post } from "@/pages/posts/Posts";
 import DOMPurify from "dompurify";
-import { MdArrowUpward, MdArrowDownward, MdCircle } from "react-icons/md";
+import { MdCircle } from "react-icons/md";
 import { Link } from "react-router-dom";
-
+import { TiArrowSortedUp, TiArrowSortedDown } from "react-icons/ti";
 interface PostCardProps {
   post: Post;
 }
@@ -16,13 +16,13 @@ const PostCard = ({ post }: PostCardProps) => {
       <section className="p-4 w-full  flex gap-3 bg-white border-1 border-gray-200 hover:border-gray-300 hover:shadow-md delay-100 transition-all duration-300 ease-in-out">
         {/* Upvotes */}
         <div className="px-1 flex flex-col items-center gap-1">
-          <MdArrowUpward
+          <TiArrowSortedUp
             className={` w-5 h-5 ${
-              vote > 0 ? "text-blue-500" : "text-gray-400"
+              vote > 0 ? "text-blue-500" : "text-gray-400/70"
             }`}
           />
           <p
-            className={`font-bold text-sm ${
+            className={`font-bold ${
               vote > 0
                 ? "text-blue-600"
                 : vote < 0
@@ -32,9 +32,9 @@ const PostCard = ({ post }: PostCardProps) => {
           >
             {vote > 0 ? vote : vote * -1}
           </p>
-          <MdArrowDownward
+          <TiArrowSortedDown
             className={` w-5 h-5 ${
-              vote < 0 ? " text-red-500" : "text-gray-400"
+              vote < 0 ? " text-red-500" : "text-gray-400/70"
             }`}
           />
         </div>
