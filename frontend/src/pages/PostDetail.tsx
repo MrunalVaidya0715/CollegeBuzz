@@ -1,4 +1,4 @@
-import { MdArrowDownward, MdArrowUpward, MdCircle } from "react-icons/md";
+import { MdCircle } from "react-icons/md";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { RiDeleteBin6Line, RiEditLine, RiFlagLine } from "react-icons/ri";
 import {
@@ -18,6 +18,7 @@ import Retry from "@/components/queryStates/Retry";
 import { TimeAgo, getColor } from "@/lib/utils";
 import useAuthStore from "@/store/useAuth";
 import DOMPurify from "dompurify";
+import Votes from "@/components/votes/Votes";
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -25,7 +26,6 @@ const PostDetail = () => {
   const {
     data: post,
     isLoading,
-    isRefetching,
     error,
     refetch,
   } = useQuery<Post>({
@@ -35,16 +35,13 @@ const PostDetail = () => {
         return res.data;
       }),
   });
-  const vote = (post?.upvote || 0) - (post?.upvote || 0);
   const [isActionsOpen, setIsActionsOpen] = useState(false);
 
-  const sanitizedDescription = DOMPurify.sanitize(
-    post?.description || ""
-  );
+  const sanitizedDescription = DOMPurify.sanitize(post?.description || "");
 
   return (
     <div className="pt-2 w-full flex flex-col gap-4">
-      {isLoading || isRefetching ? (
+      {isLoading ? (
         <PostDetailSkeleton />
       ) : error ? (
         <Retry refetch={refetch} />
@@ -137,29 +134,7 @@ const PostDetail = () => {
           {/* Upvote and Answer */}
           <div className="mt-2 w-full flex items-center justify-between gap-2">
             {/* Upvote */}
-            <div className=" flex items-center gap-1 md:gap-2">
-              {user ? (
-                <MdArrowUpward className=" w-7 h-7 text-gray-400" />
-              ) : (
-                <MdArrowUpward className=" w-7 h-7 text-gray-400" />
-              )}
-              <p
-                className={`font-bold ${
-                  vote > 0
-                    ? "text-blue-600"
-                    : vote < 0
-                    ? "text-red-600"
-                    : "text-gray-400"
-                }`}
-              >
-                {vote > 0 ? vote : vote * -1}
-              </p>
-              {user ? (
-                <MdArrowDownward className=" w-7 h-7 text-gray-400" />
-              ) : (
-                <MdArrowDownward className=" w-7 h-7 text-gray-400" />
-              )}
-            </div>
+            <Votes upvote={post?.upvote || 0} downvote={post?.downvote || 0} isUpvoted={new Map(Object.entries(post?.isUpvoted || {}))} isDownvoted={new Map(Object.entries(post?.isDownvoted || {}))}   />
             <Button disabled variant={"outline"} aria-label="Add Answer">
               Answer
             </Button>
