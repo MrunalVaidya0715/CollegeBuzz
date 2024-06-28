@@ -5,11 +5,13 @@ import {
   BiSolidUpvote,
   BiSolidDownvote,
 } from "react-icons/bi";
+import { MdLensBlur } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import useAuthStore from "@/store/useAuth";
 import useDialogStore from "@/store/useDialogStore";
 import { Button } from "../ui/button";
 import apiRequest from "@/lib/apiRequest";
+import { useState } from "react";
 
 interface VotesProps {
   upvote: number;
@@ -27,23 +29,34 @@ const Votes = ({ upvote, downvote, isUpvoted, isDownvoted }: VotesProps) => {
   const handleIsLogin = () => {
     setIsLoginOpen(true);
   };
-
+  const [isUpvoting, setIsUpvoting] = useState(false);
+  const [isDownvoting, setIsDownvoting] = useState(false);
   const upvoteMutation = useMutation({
-    mutationFn: async () => await apiRequest.put(`questions/upvote/${id}`),
+    mutationFn: async () => {
+      setIsUpvoting(true);
+      await apiRequest.put(`questions/upvote/${id}`);
+    },
     onSuccess: () => {
+      setIsUpvoting(false);
       queryClient.invalidateQueries({ queryKey: [`post.${id}`] });
     },
     onError: () => {
+      setIsUpvoting(false);
       console.error("UV Error");
     },
   });
 
   const downvoteMutation = useMutation({
-    mutationFn: async () => await apiRequest.put(`questions/downvote/${id}`),
+    mutationFn: async () => {
+      setIsDownvoting(true)
+      await apiRequest.put(`questions/downvote/${id}`)
+    },
     onSuccess: () => {
+      setIsDownvoting(false)
       queryClient.invalidateQueries({ queryKey: [`post.${id}`] });
     },
     onError: () => {
+      setIsDownvoting(false)
       console.error("DV Error");
     },
   });
@@ -69,17 +82,18 @@ const Votes = ({ upvote, downvote, isUpvoted, isDownvoted }: VotesProps) => {
       <div className="flex items-center gap-1">
         <Button
           variant="ghost"
-          className="group h-fit p-2 hover:bg-slate-100 rounded-full"
+          className="group relative h-fit p-2 hover:bg-slate-100 rounded-full overflow-hidden"
           aria-label="Upvote"
           onClick={handleUpvote}
         >
-          {user && isUpvoted ? (
-            <div>
-              {isUpvoted.get(user._id) ? (
-                <BiSolidUpvote className="w-6 h-6 text-blue-500" />
-              ) : (
-                <BiUpvote className="w-6 h-6 text-gray-400 group-hover:text-blue-500" />
-              )}
+          {isUpvoting && (
+            <div className="z-[10] absolute w-full h-full animate-ping">
+              <MdLensBlur className="w-full h-full text-blue-500 animate-pulse" />
+            </div>
+          )}
+          {user && isUpvoted && isUpvoted.get(user._id) ? (
+            <div className=" relative h-6 aspect-square overflow-hidden">
+              <BiSolidUpvote className="absolute w-6 h-6 text-blue-500" />
             </div>
           ) : (
             <BiUpvote className="w-6 h-6 text-gray-400 group-hover:text-blue-500" />
@@ -98,17 +112,18 @@ const Votes = ({ upvote, downvote, isUpvoted, isDownvoted }: VotesProps) => {
         </p>
         <Button
           variant="ghost"
-          className="group h-fit p-2 hover:bg-slate-100 rounded-full"
-          aria-label="Downvote"
+          className="group relative h-fit p-2 hover:bg-slate-100 rounded-full overflow-hidden"
+          aria-label="Upvote"
           onClick={handleDownvote}
         >
-          {user && isDownvoted ? (
-            <div>
-              {isDownvoted.get(user._id) ? (
-                <BiSolidDownvote className="w-6 h-6 text-red-500" />
-              ) : (
-                <BiDownvote className="w-6 h-6 text-gray-400 group-hover:text-red-500" />
-              )}
+          {isDownvoting && (
+            <div className="z-[10] absolute w-full h-full animate-ping">
+              <MdLensBlur className="w-full h-full text-red-500 animate-pulse" />
+            </div>
+          )}
+          {user && isDownvoted && isDownvoted.get(user._id) ? (
+            <div className=" relative h-6 aspect-square overflow-hidden">
+              <BiSolidDownvote className="absolute w-6 h-6 text-red-500" />
             </div>
           ) : (
             <BiDownvote className="w-6 h-6 text-gray-400 group-hover:text-red-500" />
