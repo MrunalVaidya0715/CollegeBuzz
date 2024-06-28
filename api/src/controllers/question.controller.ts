@@ -180,15 +180,47 @@ export const handleUpVote = async (
   try {
     const quesId = req.params.id;
     const userId = req.userId;
+    if (!userId) {
+      return next(createError(401, "UserId is required"));
+    }
+    const question = await Question.findById(quesId);
+
+
+    if (!question) {
+      return next(createError(404, "Question not found"));
+    }
+
+
+    const isDownvoted = question.isDownvoted.get(userId) || false;
+    const isUpvoted = question.isUpvoted.get(userId) || false;
+
+
+    if (isDownvoted) {
+      question.isDownvoted.set(userId, false);
+      question.downvote -= 1;
+    }
+
+
+    if (isUpvoted) {
+      question.isUpvoted.set(userId, false);
+      question.upvote -= 1;
+    } else {
+      question.isUpvoted.set(userId, true);
+      question.upvote += 1;
+    }
+
+
+    await question.save();
+
+
     res.status(200).send({
-      message: "HandleUpVote working",
-      quesId: quesId,
-      userId: userId,
+      message: "Upvoted",
     });
   } catch (error) {
     next(error);
   }
 };
+
 
 export const handleDownVote = async (
   req: CustomRequest,
@@ -201,33 +233,38 @@ export const handleDownVote = async (
     if (!userId) {
       return next(createError(401, "UserId is required"));
     }
-
     const question = await Question.findById(quesId);
+
 
     if (!question) {
       return next(createError(404, "Question not found"));
     }
 
-    const isDownvoted = question.isDownvoted.get(userId) || false;
-    const isUpvoted = question.isUpvoted.get(userId) || false;
 
-    if (isDownvoted) {
-      question.isDownvoted.set(userId, false);
-      question.downvote -= 1;
-    }
+    const isUpvoted = question.isUpvoted.get(userId) || false;
+    const isDownvoted = question.isDownvoted.get(userId) || false;
+
 
     if (isUpvoted) {
       question.isUpvoted.set(userId, false);
       question.upvote -= 1;
-    } else {
-      question.isUpvoted.set(userId, true);
-      question.upvote += 1;
     }
+
+
+    if (isDownvoted) {
+      question.isDownvoted.set(userId, false);
+      question.downvote -= 1;
+    } else {
+      question.isDownvoted.set(userId, true);
+      question.downvote += 1;
+    }
+
 
     await question.save();
 
+
     res.status(200).send({
-      message: "Upvoted",
+      message: "Downvoted",
     });
   } catch (error) {
     next(error);
