@@ -90,7 +90,60 @@ export const getQuestions = async (
   next: NextFunction
 ) => {
   try {
-    const questions = await Question.find().select("-embedding").populate("userId");
+    const { branch = 'All', category = 'all', sortBy = 'latest' } = req.query;
+
+    const filter: any = {};
+
+    if (branch !== 'All') {
+      filter.branch = branch;
+    }
+
+    if (category !== 'all') {
+      filter.category = category;
+    }
+
+    let sortOptions: any = { createdAt: -1 }; // Default to latest
+
+    switch (sortBy) {
+      case 'oldest':
+        sortOptions = { createdAt: 1 };
+        break;
+      case 'votesHighToLow':
+        sortOptions = { vote: -1 };
+        break;
+      case 'votesLowToHigh':
+        sortOptions = { vote: 1 };
+        break;
+      default:
+        break;
+    }
+
+    const questions = await Question.aggregate([
+      { $match: filter },
+      {
+        $addFields: {
+          vote: { $subtract: ['$upvote', '$downvote'] },
+        },
+      },
+      { $sort: sortOptions },
+      {
+        $project: {
+          embedding: 0,
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'userId',
+        },
+      },
+      {
+        $unwind: '$userId',
+      },
+    ]);
+
     res.status(200).send(questions);
   } catch (error) {
     next(error);
