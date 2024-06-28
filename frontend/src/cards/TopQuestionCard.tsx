@@ -1,4 +1,4 @@
-import { IoArrowUp } from "react-icons/io5";
+import { TiArrowSortedUp } from "react-icons/ti";
 const TopQuestionCard = () => {
   return (
     <div className=" flex items-center gap-1">
@@ -10,9 +10,9 @@ const TopQuestionCard = () => {
           officiis et repudiandae.
         </p>
       </div>
-      <div className=" flex items-center">
+      <div className="relative flex flex-col items-center">
+        <TiArrowSortedUp className="absolute -top-[50%] text-blue-500" />
         <p className=" font-medium text-sm">4</p>
-        <IoArrowUp className=" text-blue-500" />
       </div>
     </div>
   );
