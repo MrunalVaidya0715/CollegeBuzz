@@ -13,7 +13,7 @@ const PostCard = ({ post }: PostCardProps) => {
   const sanitizedDescription = DOMPurify.sanitize(post.description || "");
   return (
     <Link to={`/posts/${post._id}`}>
-      <section className="px-4 py-2 w-full  flex gap-3 bg-white border-1 border-gray-200 hover:border-gray-300 hover:shadow-md delay-100 transition-all duration-300 ease-in-out">
+      <section className="p-4 w-full  flex gap-3 bg-white border-1 border-gray-200 hover:border-gray-300 hover:shadow-md delay-100 transition-all duration-300 ease-in-out">
         {/* Upvotes */}
         <div className="px-1 flex flex-col items-center gap-1">
           <MdArrowUpward
@@ -50,7 +50,7 @@ const PostCard = ({ post }: PostCardProps) => {
                 {post.category}
               </h2>
             </div>
-            <h2 className=" text-lg font-[600]">{post.title}</h2>
+            <h2 className="leading-5 text-lg font-[600]">{post.title}</h2>
           </div>
           {/* Description */}
 
@@ -60,7 +60,7 @@ const PostCard = ({ post }: PostCardProps) => {
           ></div>
 
           {/* User */}
-          <div className=" pt-2  pb-2 border-t-1 border-gray-200 flex items-center gap-2">
+          <div className=" pt-2 border-t-1 border-gray-200 flex items-center gap-2">
             <div className=" flex items-center gap-2">
               <div className=" w-[30px] aspect-square overflow-hidden bottom-1 border-gray-200 rounded-full">
                 <img
