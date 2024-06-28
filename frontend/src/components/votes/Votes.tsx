@@ -82,7 +82,8 @@ const Votes = ({ upvote, downvote, isUpvoted, isDownvoted }: VotesProps) => {
       <div className="flex items-center gap-1">
         <Button
           variant="ghost"
-          className="group relative h-fit p-2 hover:bg-slate-100 rounded-full overflow-hidden"
+          disabled={isUpvoting || isDownvoting}
+          className="group relative h-fit p-1 hover:bg-transparent rounded-full overflow-hidden"
           aria-label="Upvote"
           onClick={handleUpvote}
         >
@@ -112,7 +113,8 @@ const Votes = ({ upvote, downvote, isUpvoted, isDownvoted }: VotesProps) => {
         </p>
         <Button
           variant="ghost"
-          className="group relative h-fit p-2 hover:bg-slate-100 rounded-full overflow-hidden"
+          disabled={isUpvoting || isDownvoting}
+          className="group relative h-fit p-1 hover:bg-transparent rounded-full overflow-hidden"
           aria-label="Upvote"
           onClick={handleDownvote}
         >
