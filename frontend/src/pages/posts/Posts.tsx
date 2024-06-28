@@ -3,7 +3,9 @@ import NoData from "@/components/queryStates/NoData";
 import Retry from "@/components/queryStates/Retry";
 import apiRequest from "@/lib/apiRequest";
 import PostCardSkeleton from "@/skeletons/PostCardSkeleton";
+import useQuestionFilterStore from "@/store/useFilterSortStore";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect} from "react";
 
 interface UserId {
   _id: string;
@@ -32,6 +34,10 @@ export interface Post {
 }
 
 const Posts = () => {
+  const { category, sortBy } = useQuestionFilterStore();
+  const catQuery = category;
+  const sortQuery =  sortBy;
+
   const {
     data: posts,
     isLoading,
@@ -41,10 +47,15 @@ const Posts = () => {
   } = useQuery<Post[]>({
     queryKey: ["posts"],
     queryFn: () =>
-      apiRequest.get("questions").then((res) => {
-        return res.data;
-      }),
+      apiRequest
+        .get(`questions?category=${catQuery}&sortBy=${sortQuery}`)
+        .then((res) => {
+          return res.data;
+        }),
   });
+  useEffect(() => {
+    refetch();
+  }, [catQuery, sortQuery, refetch]);
   return (
     <div className="w-full flex flex-col gap-4">
       {isLoading || isRefetching ? (
