@@ -90,28 +90,28 @@ export const getQuestions = async (
   next: NextFunction
 ) => {
   try {
-    const { branch = 'All', category = 'all', sortBy = 'latest' } = req.query;
+    const { branch = "All", category = "all", sortBy = "latest" } = req.query;
 
     const filter: any = {};
 
-    if (branch !== 'All') {
+    if (branch !== "All") {
       filter.branch = branch;
     }
 
-    if (category !== 'all') {
+    if (category !== "all") {
       filter.category = category;
     }
 
     let sortOptions: any = { createdAt: -1 }; // Default to latest
 
     switch (sortBy) {
-      case 'oldest':
+      case "oldest":
         sortOptions = { createdAt: 1 };
         break;
-      case 'votesHighToLow':
+      case "votesHighToLow":
         sortOptions = { vote: -1 };
         break;
-      case 'votesLowToHigh':
+      case "votesLowToHigh":
         sortOptions = { vote: 1 };
         break;
       default:
@@ -122,7 +122,7 @@ export const getQuestions = async (
       { $match: filter },
       {
         $addFields: {
-          vote: { $subtract: ['$upvote', '$downvote'] },
+          vote: { $subtract: ["$upvote", "$downvote"] },
         },
       },
       { $sort: sortOptions },
@@ -133,14 +133,14 @@ export const getQuestions = async (
       },
       {
         $lookup: {
-          from: 'users',
-          localField: 'userId',
-          foreignField: '_id',
-          as: 'userId',
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userId",
         },
       },
       {
-        $unwind: '$userId',
+        $unwind: "$userId",
       },
     ]);
 
@@ -157,17 +157,103 @@ export const getQuestionById = async (
 ) => {
   try {
     const quesId = req.params.id;
-    if(!mongoose.Types.ObjectId.isValid(quesId)){
+    if (!mongoose.Types.ObjectId.isValid(quesId)) {
       return next(createError(404, "Question not found"));
     }
-    const question = await Question.findById(quesId).select("-embedding").populate("userId");
-    if(!question){
+    const question = await Question.findById(quesId)
+      .select("-embedding")
+      .populate("userId");
+    if (!question) {
       return next(createError(404, "Question not found"));
     }
-    res.status(200).send(question)
+    res.status(200).send(question);
   } catch (error) {
     next(error);
   }
 };
 
+export const handleUpVote = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const quesId = req.params.id;
+    const userId = req.userId;
+    if (!userId) {
+      return next(createError(401, "UserId is required"));
+    }
+    const question = await Question.findById(quesId);
 
+    if (!question) {
+      return next(createError(404, "Question not found"));
+    }
+
+    const isDownvoted = question.isDownvoted.get(userId) || false;
+    const isUpvoted = question.isUpvoted.get(userId) || false;
+
+    if (isDownvoted) {
+      question.isDownvoted.set(userId, false);
+      question.downvote -= 1;
+    }
+
+    if (isUpvoted) {
+      question.isUpvoted.set(userId, false);
+      question.upvote -= 1;
+    } else {
+      question.isUpvoted.set(userId, true);
+      question.upvote += 1;
+    }
+
+    await question.save();
+
+    res.status(200).send({
+      message: "Upvoted",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const handleDownVote = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const quesId = req.params.id;
+    const userId = req.userId;
+    if (!userId) {
+      return next(createError(401, "UserId is required"));
+    }
+    const question = await Question.findById(quesId);
+
+    if (!question) {
+      return next(createError(404, "Question not found"));
+    }
+
+    const isUpvoted = question.isUpvoted.get(userId) || false;
+    const isDownvoted = question.isDownvoted.get(userId) || false;
+
+    if (isUpvoted) {
+      question.isUpvoted.set(userId, false);
+      question.upvote -= 1;
+    }
+
+    if (isDownvoted) {
+      question.isDownvoted.set(userId, false);
+      question.downvote -= 1;
+    } else {
+      question.isDownvoted.set(userId, true);
+      question.downvote += 1;
+    }
+
+    await question.save();
+
+    res.status(200).send({
+      message: "Downvoted",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
