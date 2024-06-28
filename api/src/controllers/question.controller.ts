@@ -172,4 +172,42 @@ export const getQuestionById = async (
   }
 };
 
+export const handleUpVote = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const quesId = req.params.id;
+    const userId = req.userId;
+    res
+      .status(200)
+      .send({
+        message: "HandleUpVote working",
+        quesId: quesId,
+        userId: userId,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
 
+export const handleDownVote = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const quesId = req.params.id;
+    const userId = req.userId;
+    res
+      .status(200)
+      .send({
+        message: "HandleDownVote working",
+        quesId: quesId,
+        userId: userId,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
