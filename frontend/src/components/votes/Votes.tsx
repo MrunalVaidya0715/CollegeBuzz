@@ -38,7 +38,9 @@ const Votes = ({ upvote, downvote, isUpvoted, isDownvoted }: VotesProps) => {
     },
     onSuccess: () => {
       setIsUpvoting(false);
-      queryClient.invalidateQueries({ queryKey: [`post.${id}`] });
+      queryClient.invalidateQueries({ queryKey: [`post.${id}`] })
+      queryClient.invalidateQueries({ queryKey: ["topQuestions"] })
+      
     },
     onError: () => {
       setIsUpvoting(false);
@@ -54,6 +56,7 @@ const Votes = ({ upvote, downvote, isUpvoted, isDownvoted }: VotesProps) => {
     onSuccess: () => {
       setIsDownvoting(false)
       queryClient.invalidateQueries({ queryKey: [`post.${id}`] });
+      queryClient.invalidateQueries({ queryKey: ["topQuestions"] })
     },
     onError: () => {
       setIsDownvoting(false)
