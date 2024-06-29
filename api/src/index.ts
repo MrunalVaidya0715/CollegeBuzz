@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 
 import authRoute from './routes/auth.route'
 import questionRoute from './routes/question.route'
+import answerRoute from './routes/answer.route'
 
 const app: Express = express();
 dotenv.config();
@@ -39,6 +40,7 @@ app.use(cookieParser());
 
 app.use('/api/auth', authRoute)
 app.use('/api/questions', questionRoute)
+app.use('/api/answers', answerRoute)
 
 app.use('/', (req, res, next) => {
     res.send("Reserved for College-Buzz");
