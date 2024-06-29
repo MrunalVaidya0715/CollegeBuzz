@@ -55,8 +55,8 @@ export const FilterOptions = [
 
   {
     id: 6,
-    name: "Faculty",
-    value: "faculty",
+    name: "Programming",
+    value: "programming",
   },
 
   {
