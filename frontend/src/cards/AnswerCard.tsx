@@ -7,9 +7,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
+import { Answer } from "@/components/answers/Answers";
+import DOMPurify from "dompurify";
+import { TimeAgo } from "@/lib/utils";
+import useAuthStore from "@/store/useAuth";
 
-const AnswerCard = () => {
+interface AnswerCardProps {
+  answer: Answer;
+}
+
+const AnswerCard = ({ answer }: AnswerCardProps) => {
+  const user = useAuthStore((state) => state.user);
   const [isActionsOpen, setIsActionsOpen] = useState(false);
+  const sanitizedContent = DOMPurify.sanitize(answer.content || "");
   return (
     <section className="p-4 w-full flex flex-col gap-2 bg-white border-1 border-gray-300">
       {/* User, Action */}
@@ -17,19 +27,21 @@ const AnswerCard = () => {
         {/* User */}
         <div className=" flex items-center gap-2">
           <div className=" flex items-center gap-2">
-            <div className=" w-[30px] aspect-square overflow-hidden bottom-1 border-gray-200">
+            <div className=" w-[30px] aspect-square rounded-full overflow-hidden bottom-1 border-gray-200">
               <img
                 className=" w-full h-full object-cover object-center"
-                src="/assets/no-profile.png"
-                alt="ProfilePic"
+                src={answer.userId.profileImg || "/assets/no-profile.png"}
+                alt={answer.userId.username}
               />
             </div>
             <h2 className=" text-blue-500 text-sm font-medium">
-              John Doe
+              {user && answer.userId._id === user?._id
+                ? "You"
+                : answer.userId.username}
             </h2>
           </div>
           <MdCircle className=" w-2 h-2 text-gray-300" />
-          <p className=" text-gray-500 text-sm">1 Month ago</p>
+          <p className=" text-gray-500 text-sm">{TimeAgo(answer.createdAt)}</p>
         </div>
         {/* Action */}
         <Popover open={isActionsOpen} onOpenChange={setIsActionsOpen}>
@@ -59,14 +71,14 @@ const AnswerCard = () => {
         </Popover>
       </div>
       {/* Description */}
-      <div>
-        <p className=" text-gray-800">
-          Practice regularly on coding platforms like LeetCode and HackerRank.
-          Start with small problems and gradually move to more complex ones.
-        </p>
+      <div className="w-full   ">
+        <div
+          className="w-full max-w-full prose leading-6 -space-y-0  prose-h1:text-2xl prose-h1:font-bold prose-h2:text-xl prose-h2:font-semibold prose-h3:text-lg prose-h3:font-medium prose-a:text-sm prose-a:text-blue-500 prose-a:hover:text-blue-800 prose-a:hover:underline "
+          dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+        ></div>
       </div>
       {/* Upvote and Answer */}
-      <div className="mt-2 w-full flex items-center justify-end gap-2">
+      <div className="mt-2 w-full hidden items-center justify-end gap-2">
         {/* Upvote */}
         <div className=" flex items-center gap-2">
           <MdArrowUpward className=" w-7 h-7 text-gray-400" />

@@ -41,26 +41,21 @@ export const createAnswer = async (
   }
 };
 
-
-export const getAnswers = async (req: Request, res: Response, next: NextFunction) => {
+export const getAnswers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { questId } = req.params;
 
     const answers = await Answer.find({ questId, parentAnswer: null })
       .populate({
-        path: 'replies',
-        populate: {
-          path: 'replies',
-          model: 'Answer',
-          populate: {
-            path: 'replies',
-            model: 'Answer'
-          }
-        }
+        path: "userId",
+        select: "username profileImg"
       })
-      .exec();
 
-    res.status(200).json(answers);
+    res.status(200).send(answers);
   } catch (error) {
     next(error);
   }
