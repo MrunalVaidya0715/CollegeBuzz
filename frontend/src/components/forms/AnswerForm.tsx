@@ -14,6 +14,8 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { useToast } from "../ui/use-toast";
 import useDialogStore from "@/store/useDialogStore";
+import apiRequest from "@/lib/apiRequest";
+import { useParams } from "react-router-dom";
 const ansformSchema = z.object({
   answer: z
     .string()
@@ -29,6 +31,7 @@ const ansformSchema = z.object({
 
 export type AnswerFormSchema = z.infer<typeof ansformSchema>;
 const AnswerForm = () => {
+  const { id } = useParams();
   const { toast } = useToast();
   const { setIsAnsQuesOpen } = useDialogStore();
   const form = useForm<z.infer<typeof ansformSchema>>({
@@ -40,7 +43,9 @@ const AnswerForm = () => {
 
   async function onSubmit(values: z.infer<typeof ansformSchema>) {
     try {
-      console.log(values);
+      await apiRequest.post(`answers/add-answer/${id}`, {
+        content: values.answer
+      });
       toast({ title: "Answer uploaded Successfully" });
       setIsAnsQuesOpen(false);
     } catch (error) {
