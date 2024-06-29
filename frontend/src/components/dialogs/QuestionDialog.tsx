@@ -7,7 +7,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AiOutlineClose } from "react-icons/ai";
-import AddAnswer from "../forms/AskQuestionForm";
+import AskQuestionForm from "../forms/AskQuestionForm";
 
 interface QuestionDialogProps {
   isAskQuesOpen: boolean;
@@ -30,7 +30,7 @@ const QuestionDialog = ({ isAskQuesOpen, setIsAskQuesOpen }: QuestionDialogProps
             keep our community safe and sound.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AddAnswer setIsAskQuesOpen={setIsAskQuesOpen} />
+        <AskQuestionForm setIsAskQuesOpen={setIsAskQuesOpen} />
       </AlertDialogContent>
     </AlertDialog>
   );
