@@ -7,6 +7,8 @@ interface DialogState {
   setIsDrawerOpen: (isOpen: boolean) => void;
   isAskQuesOpen: boolean;
   setIsAskQuesOpen: (isOpen: boolean) => void;
+  isAnsQuesOpen: boolean;
+  setIsAnsQuesOpen: (isOpen: boolean) => void;
 }
 
 const useDialogStore = create<DialogState>()((set) => ({
@@ -16,6 +18,8 @@ const useDialogStore = create<DialogState>()((set) => ({
   setIsDrawerOpen: (isOpen) => set({ isDrawerOpen: isOpen }),
   isAskQuesOpen: false,
   setIsAskQuesOpen: (isOpen) => set({ isAskQuesOpen: isOpen }),
+  isAnsQuesOpen: false,
+  setIsAnsQuesOpen: (isOpen) => set({ isAnsQuesOpen: isOpen }),
 }));
 
 export default useDialogStore;
