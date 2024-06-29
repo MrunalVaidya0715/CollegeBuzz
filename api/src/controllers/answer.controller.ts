@@ -40,3 +40,28 @@ export const createAnswer = async (
     next(error);
   }
 };
+
+
+export const getAnswers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { questId } = req.params;
+
+    const answers = await Answer.find({ questId, parentAnswer: null })
+      .populate({
+        path: 'replies',
+        populate: {
+          path: 'replies',
+          model: 'Answer',
+          populate: {
+            path: 'replies',
+            model: 'Answer'
+          }
+        }
+      })
+      .exec();
+
+    res.status(200).json(answers);
+  } catch (error) {
+    next(error);
+  }
+};
