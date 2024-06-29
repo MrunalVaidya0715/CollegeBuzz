@@ -6,9 +6,8 @@ const Explore = () => {
   return (
     <section className="pt-2 w-full grid gap-2 md:gap-4 grid-cols-2 ">
       {CategoriesOptions.map((cat) => (
-        <Link to={`/?category=${cat.value}&sortBy=latest`}>
+        <Link key={cat.id} to={`/?category=${cat.value}&sortBy=latest`}>
           <div
-            key={cat.id}
             className="relative min-h-[100px] flex items-center justify-center gap-2 text-white border-1 border-gray-300 hover:border-gray-600 hover:shadow-lg brightness-105 transition-all duration-300 ease-in-out"
             style={{ backgroundColor: getColor(cat.value) }}
           >
