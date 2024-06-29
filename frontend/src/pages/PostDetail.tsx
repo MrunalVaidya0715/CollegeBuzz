@@ -19,9 +19,12 @@ import { TimeAgo, getColor } from "@/lib/utils";
 import useAuthStore from "@/store/useAuth";
 import DOMPurify from "dompurify";
 import Votes from "@/components/votes/Votes";
+import useDialogStore from "@/store/useDialogStore";
+import AnswerDialog from "@/components/dialogs/AnswerDialog";
 
 const PostDetail = () => {
   const { id } = useParams();
+  const { setIsAnsQuesOpen } = useDialogStore();
   const user = useAuthStore((state) => state.user);
   const {
     data: post,
@@ -134,10 +137,20 @@ const PostDetail = () => {
           {/* Upvote and Answer */}
           <div className="mt-2 w-full flex items-center justify-between gap-2">
             {/* Upvote */}
-            <Votes upvote={post?.upvote || 0} downvote={post?.downvote || 0} isUpvoted={new Map(Object.entries(post?.isUpvoted || {}))} isDownvoted={new Map(Object.entries(post?.isDownvoted || {}))}   />
-            <Button disabled variant={"outline"} aria-label="Add Answer">
+            <Votes
+              upvote={post?.upvote || 0}
+              downvote={post?.downvote || 0}
+              isUpvoted={new Map(Object.entries(post?.isUpvoted || {}))}
+              isDownvoted={new Map(Object.entries(post?.isDownvoted || {}))}
+            />
+            <Button
+              onClick={() => setIsAnsQuesOpen(true)}
+              variant={"outline"}
+              aria-label="Add Answer"
+            >
               Answer
             </Button>
+            {post && <AnswerDialog title={post.title} user={{username: post.userId.username, profileImg: post.userId.profileImg}} date={post.createdAt} />}
           </div>
         </section>
       )}
