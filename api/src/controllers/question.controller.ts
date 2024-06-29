@@ -172,6 +172,37 @@ export const getQuestionById = async (
   }
 };
 
+export const getTopQuestions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const topQuestions = await Question.aggregate([
+      {
+        $addFields: {
+          vote: { $subtract: ["$upvote", "$downvote"] },
+        },
+      },
+      {
+        $sort: { vote: -1 },
+      },
+      {
+        $project: {
+          title: 1,
+          vote: 1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+    res.status(200).send(topQuestions);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const handleUpVote = async (
   req: CustomRequest,
   res: Response,
@@ -185,21 +216,17 @@ export const handleUpVote = async (
     }
     const question = await Question.findById(quesId);
 
-
     if (!question) {
       return next(createError(404, "Question not found"));
     }
 
-
     const isDownvoted = question.isDownvoted.get(userId) || false;
     const isUpvoted = question.isUpvoted.get(userId) || false;
-
 
     if (isDownvoted) {
       question.isDownvoted.set(userId, false);
       question.downvote -= 1;
     }
-
 
     if (isUpvoted) {
       question.isUpvoted.set(userId, false);
@@ -209,9 +236,7 @@ export const handleUpVote = async (
       question.upvote += 1;
     }
 
-
     await question.save();
-
 
     res.status(200).send({
       message: "Upvoted",
@@ -220,7 +245,6 @@ export const handleUpVote = async (
     next(error);
   }
 };
-
 
 export const handleDownVote = async (
   req: CustomRequest,
@@ -235,21 +259,17 @@ export const handleDownVote = async (
     }
     const question = await Question.findById(quesId);
 
-
     if (!question) {
       return next(createError(404, "Question not found"));
     }
 
-
     const isUpvoted = question.isUpvoted.get(userId) || false;
     const isDownvoted = question.isDownvoted.get(userId) || false;
-
 
     if (isUpvoted) {
       question.isUpvoted.set(userId, false);
       question.upvote -= 1;
     }
-
 
     if (isDownvoted) {
       question.isDownvoted.set(userId, false);
@@ -259,9 +279,7 @@ export const handleDownVote = async (
       question.downvote += 1;
     }
 
-
     await question.save();
-
 
     res.status(200).send({
       message: "Downvoted",
