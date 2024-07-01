@@ -47,13 +47,15 @@ export const getAnswers = async (
   next: NextFunction
 ) => {
   try {
-    const { questId } = req.params;
+    const quesId = req.params.id;
 
-    const answers = await Answer.find({ questId, parentAnswer: null })
-      .populate({
-        path: "userId",
-        select: "username profileImg"
-      })
+    const answers = await Answer.find({
+      questionId: quesId,
+      parentAnswer: null,
+    }).populate({
+      path: "userId",
+      select: "username profileImg",
+    });
 
     res.status(200).send(answers);
   } catch (error) {
