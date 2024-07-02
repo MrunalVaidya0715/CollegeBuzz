@@ -9,11 +9,11 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Answers from "@/components/answers/Answers";
-import { Post } from "./posts/Posts";
+import { Post } from "./Posts";
 import { Link, useParams } from "react-router-dom";
 import apiRequest from "@/lib/apiRequest";
 import { useQuery } from "@tanstack/react-query";
-import PostDetailSkeleton from "@/skeletons/PostDetailSkeleton";
+import PostDetailSkeleton from "@/components/skeletons/PostDetailSkeleton";
 import Retry from "@/components/queryStates/Retry";
 import { TimeAgo, getColor } from "@/lib/utils";
 import useAuthStore from "@/store/useAuth";

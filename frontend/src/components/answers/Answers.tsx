@@ -1,6 +1,6 @@
 import AnswerCard from "@/cards/AnswerCard";
 import apiRequest from "@/lib/apiRequest";
-import AnswersSkeleton from "@/skeletons/AnswersSkeleton";
+import AnswersSkeleton from "@/components/skeletons/AnswersSkeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import Retry from "../queryStates/Retry";

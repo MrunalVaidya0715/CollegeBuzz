@@ -4,7 +4,7 @@ import Navbar from "./components/navbar/Navbar";
 import Home from "./pages/home/Home";
 import NotFound from "./pages/not-found/NotFound";
 import Posts from "./pages/posts/Posts";
-import PostDetail from "./pages/PostDetail";
+import PostDetail from "./pages/posts/PostDetail";
 import ScrollToTopOnPageChange from "./lib/utils";
 import Explore from "./pages/explore/Explore";
 import { GoogleOAuthProvider } from "@react-oauth/google";

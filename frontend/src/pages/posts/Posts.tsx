@@ -2,7 +2,7 @@ import PostCard from "@/cards/PostCard";
 import NoData from "@/components/queryStates/NoData";
 import Retry from "@/components/queryStates/Retry";
 import apiRequest from "@/lib/apiRequest";
-import PostCardSkeleton from "@/skeletons/PostCardSkeleton";
+import PostCardSkeleton from "@/components/skeletons/PostCardSkeleton";
 import useQuestionFilterStore from "@/store/useFilterSortStore";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect} from "react";

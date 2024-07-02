@@ -1,6 +1,6 @@
 import Section from "@/components/section/Section";
 import Sidebar from "@/components/sidebar/Sidebar";
-import FilterSort from "@/filter-sort/FilterSort";
+import FilterSort from "@/components/filter-sort/FilterSort";
 import { Outlet } from "react-router-dom";
 
 const Home = () => {
