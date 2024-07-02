@@ -26,7 +26,7 @@ const TopQuestions = () => {
   return (
     <section className="py-4 pl-3 pr-2 w-full h-auto flex flex-col gap-4 bg-white border-1 border-gray-200">
       <h2 className=" text-center font-medium">Top Questions</h2>
-      <div className="w-full flex flex-col gap-5">
+      <div className="w-full flex flex-col gap-4">
         {isLoading ? (
           Array(4)
             .fill(null)
