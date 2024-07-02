@@ -24,7 +24,7 @@ import AnswerDialog from "@/components/dialogs/AnswerDialog";
 
 const PostDetail = () => {
   const { id } = useParams();
-  const { setIsAnsQuesOpen } = useDialogStore();
+  const { setIsAnsQuesOpen, setIsLoginOpen } = useDialogStore();
   const user = useAuthStore((state) => state.user);
   const {
     data: post,
@@ -144,7 +144,7 @@ const PostDetail = () => {
               isDownvoted={new Map(Object.entries(post?.isDownvoted || {}))}
             />
             <Button
-              onClick={() => setIsAnsQuesOpen(true)}
+              onClick={user ? () => setIsAnsQuesOpen(true) : ()=> setIsLoginOpen(true) }
               variant={"outline"}
               aria-label="Add Answer"
               className=" text-gray-600 border-gray-400 hover:border-gray-500"
