@@ -147,6 +147,7 @@ const PostDetail = () => {
               onClick={() => setIsAnsQuesOpen(true)}
               variant={"outline"}
               aria-label="Add Answer"
+              className=" text-gray-600 border-gray-400 hover:border-gray-500"
             >
               Answer
             </Button>
