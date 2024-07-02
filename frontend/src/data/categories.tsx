@@ -62,12 +62,12 @@ export const CategoriesOptions = [
 ];
 
 export const BgColors = [
-  "#1F77B4", // Blue
-  "#FF7F0E", // Orange
-  "#2CA02C", // Green
-  "#D62728", // Red
-  "#9467BD", // Purple
-  "#8C564B", // Brown
-  "#E377C2", // Pink
-  "#7F7F7F"  // Gray
+  "#006400", // darkgreen
+  "#ff4500", // orangeRed
+  "#191970", // midnightBlue
+  "#ff1493", // deepPink
+  "#00ff00", // lime
+  "#ff00ff", // fuchsia
+  "#0000ff", // blue
+  "#1e90ff", // dogerBlue
 ];
