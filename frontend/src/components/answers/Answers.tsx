@@ -45,7 +45,7 @@ const Answers = () => {
       ) : error ? (
         <Retry refetch={refetch} />
       ) : answers?.length === 0 ? (
-        <NoData message="No Answers yet" />
+        <NoData message="No Answers yet" className=" min-h-[100px]" />
       ) : (
         answers?.map((answer) => (
           <AnswerCard key={answer._id} answer={answer} />
