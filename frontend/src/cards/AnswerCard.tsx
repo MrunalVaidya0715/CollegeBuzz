@@ -62,7 +62,7 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
                   <RiEditLine className=" w-5 h-5" />
                   <p>Edit</p>
                 </div>
-                <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
+                <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600">
                   <RiDeleteBin6Line className=" w-5 h-5" />
                   <p>Delete</p>
                 </div>
