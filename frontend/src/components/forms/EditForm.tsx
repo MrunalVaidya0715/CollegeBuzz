@@ -12,6 +12,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { useToast } from "../ui/use-toast";
+import useDialogStore from "@/store/useDialogStore";
+import apiRequest from "@/lib/apiRequest";
+import { useParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { Input } from "../ui/input";
 
 const editFormSchema = z.object({
@@ -36,6 +41,10 @@ interface EditFormProps {
   eDescription: string;
 }
 const EditForm = ({ eTitle, eDescription }: EditFormProps) => {
+  const { id } = useParams();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { setIsEditQuesOpen } = useDialogStore();
   const form = useForm<z.infer<typeof editFormSchema>>({
     resolver: zodResolver(editFormSchema),
     defaultValues: {
@@ -45,7 +54,31 @@ const EditForm = ({ eTitle, eDescription }: EditFormProps) => {
   });
 
   async function onSubmit(values: z.infer<typeof editFormSchema>) {
-    console.log(values);
+    const { title, description } = values;
+    try {
+      const res = await apiRequest.put(`questions/edit/${id}`, {
+        title,
+        description,
+      });
+      if (res.data.message === "Question updated successfully") {
+        queryClient.invalidateQueries({ queryKey: [`post.${id}`] });
+        toast({ title: res.data.message });
+        setIsEditQuesOpen(false);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Couldn't Edit Question",
+          description: "Please try again.",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again!",
+      });
+      console.log(error);
+    }
   }
   return (
     <Form {...form}>
@@ -84,7 +117,7 @@ const EditForm = ({ eTitle, eDescription }: EditFormProps) => {
           type="submit"
           className="mt-4 w-full disabled:opacity-70"
         >
-          Update
+          {form.formState.isSubmitting ? "Updating..." : "Update"}
         </Button>
       </form>
     </Form>
