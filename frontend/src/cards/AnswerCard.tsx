@@ -1,4 +1,4 @@
-import { MdArrowDownward, MdArrowUpward, MdCircle } from "react-icons/md";
+import { MdCircle } from "react-icons/md";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { RiDeleteBin6Line, RiEditLine, RiFlagLine } from "react-icons/ri";
 import {
@@ -11,6 +11,7 @@ import { Answer } from "@/components/answers/Answers";
 import DOMPurify from "dompurify";
 import { TimeAgo } from "@/lib/utils";
 import useAuthStore from "@/store/useAuth";
+import VotesAnswers from "@/components/votes/VotesAnswers";
 
 interface AnswerCardProps {
   answer: Answer;
@@ -55,18 +56,23 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
             </div>
           </PopoverTrigger>
           <PopoverContent className="absolute -right-1 flex flex-col gap-3 max-w-fit">
-            <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
-              <RiEditLine className=" w-5 h-5" />
-              <p>Edit</p>
-            </div>
-            <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
-              <RiDeleteBin6Line className=" w-5 h-5" />
-              <p>Delete</p>
-            </div>
-            <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
-              <RiFlagLine className=" w-5 h-5" />
-              <p className=" whitespace-nowrap">Report Post</p>
-            </div>
+            {user?._id === answer.userId._id ? (
+              <>
+                <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
+                  <RiEditLine className=" w-5 h-5" />
+                  <p>Edit</p>
+                </div>
+                <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
+                  <RiDeleteBin6Line className=" w-5 h-5" />
+                  <p>Delete</p>
+                </div>
+              </>
+            ) : (
+              <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
+                <RiFlagLine className=" w-5 h-5" />
+                <p className=" whitespace-nowrap">Report Post</p>
+              </div>
+            )}
           </PopoverContent>
         </Popover>
       </div>
@@ -78,13 +84,9 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
         ></div>
       </div>
       {/* Upvote and Answer */}
-      <div className="mt-2 w-full hidden items-center justify-end gap-2">
+      <div className="mt-2 w-full flex items-center justify-end gap-2">
         {/* Upvote */}
-        <div className=" flex items-center gap-2">
-          <MdArrowUpward className=" w-7 h-7 text-gray-400" />
-          <p className=" font-bold">5</p>
-          <MdArrowDownward className=" w-7 h-7 text-gray-400" />
-        </div>
+        <VotesAnswers id={answer._id} upvote={answer.upvote} downvote={answer.downvote} isUpvoted={new Map(Object.entries(answer.isUpvoted))} isDownvoted={new Map(Object.entries(answer.isDownvoted))}/>
       </div>
     </section>
   );
