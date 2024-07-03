@@ -3,6 +3,7 @@ import { CustomRequest } from "../middleware/jwt";
 import Answer from "../models/answer.model";
 import Question from "../models/question.model";
 import createError from "../utils/createError";
+import mongoose from "mongoose";
 
 export const createAnswer = async (
   req: CustomRequest,
@@ -143,6 +144,44 @@ export const handleDownVote = async (
 
     res.status(200).send({
       message: "Downvoted",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const editAnswer = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const ansId = req.params.id;
+    const userId = req.userId;
+    const { content } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(ansId)) {
+      return next(createError(404, "Answer not found"));
+    }
+
+    const answer = await Answer.findById(ansId);
+
+    if (!answer) {
+      return next(createError(404, "Answer not found"));
+    }
+
+    if (answer.userId._id.toString() !== userId) {
+      return next(createError(403, "Only Answer owner can edit"));
+    }
+
+    if (content) answer.content = content;
+    
+
+    const updatedAnswer = await answer.save();
+
+    res.status(200).send({
+      message: "Answer updated successfully",
+      answer: updatedAnswer,
     });
   } catch (error) {
     next(error);
