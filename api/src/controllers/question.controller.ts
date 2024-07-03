@@ -288,3 +288,45 @@ export const handleDownVote = async (
     next(error);
   }
 };
+
+export const editQuestion = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const quesId = req.params.id;
+    const userId = req.userId;
+    const { title, description } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(quesId)) {
+      return next(createError(404, "Question not found"));
+    }
+
+    const question = await Question.findById(quesId);
+
+    if (!question) {
+      return next(createError(404, "Question not found"));
+    }
+    
+    if(question.userId._id.toString() !== userId){
+      return next(createError(401, "Only Question owner can edit"));
+    }
+
+    if (title) question.title = title;
+    if (description) question.description = description;
+    if (title || description) {
+      const embedding = await createEmbedding(title + ". " + description);
+      question.embedding = embedding as number[];
+    }
+
+    const updatedQuestion = await question.save();
+
+    res.status(200).send({
+      message: "Question updated successfully",
+      question: updatedQuestion,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
