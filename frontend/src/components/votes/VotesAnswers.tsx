@@ -11,6 +11,7 @@ import useDialogStore from "@/store/useDialogStore";
 import { Button } from "../ui/button";
 import apiRequest from "@/lib/apiRequest";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 interface VotesAnswersProps {
   id: string;
@@ -27,6 +28,7 @@ const VotesAnswers = ({
   isUpvoted,
   isDownvoted,
 }: VotesAnswersProps) => {
+  const { id: quesId } = useParams();
   const { setIsLoginOpen } = useDialogStore();
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
@@ -43,7 +45,7 @@ const VotesAnswers = ({
     },
     onSuccess: () => {
       setIsUpvoting(false);
-      queryClient.invalidateQueries({ queryKey: [`answers.${id}`] });
+      queryClient.invalidateQueries({ queryKey: [`answers.${quesId}`] });
     },
     onError: () => {
       setIsUpvoting(false);
@@ -58,7 +60,7 @@ const VotesAnswers = ({
     },
     onSuccess: () => {
       setIsDownvoting(false);
-      queryClient.invalidateQueries({ queryKey: [`answers.${id}`] });
+      queryClient.invalidateQueries({ queryKey: [`answers.${quesId}`] });
     },
     onError: () => {
       setIsDownvoting(false);
