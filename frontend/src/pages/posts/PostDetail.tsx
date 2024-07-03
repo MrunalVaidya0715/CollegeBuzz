@@ -21,10 +21,11 @@ import DOMPurify from "dompurify";
 import Votes from "@/components/votes/Votes";
 import useDialogStore from "@/store/useDialogStore";
 import AnswerDialog from "@/components/dialogs/AnswerDialog";
+import EditDialog from "@/components/dialogs/EditDialog";
 
 const PostDetail = () => {
   const { id } = useParams();
-  const { setIsAnsQuesOpen, setIsLoginOpen } = useDialogStore();
+  const { setIsAnsQuesOpen, setIsLoginOpen, setIsEditQuesOpen } = useDialogStore();
   const user = useAuthStore((state) => state.user);
   const {
     data: post,
@@ -93,7 +94,7 @@ const PostDetail = () => {
               <PopoverContent className="absolute -right-1 flex flex-col gap-3 max-w-fit">
                 {user?._id === post?.userId._id ? (
                   <>
-                    <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
+                    <div onClick={()=>setIsEditQuesOpen(true)} className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
                       <RiEditLine className=" w-5 h-5" />
                       <p>Edit</p>
                     </div>
@@ -111,6 +112,8 @@ const PostDetail = () => {
               </PopoverContent>
             </Popover>
           </div>
+          {/* Edit Dialog & Delete Action */}
+          <EditDialog eTitle={post?.title || ""} eDescription={post?.description || ""}  />
           {/* Category & Title */}
           <div className=" space-y-1 ">
             <div
