@@ -62,3 +62,89 @@ export const getAnswers = async (
     next(error);
   }
 };
+
+export const handleUpVote = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const ansId = req.params.id;
+    const userId = req.userId;
+    if (!userId) {
+      return next(createError(403, "UserId is required"));
+    }
+    const answer = await Answer.findById(ansId);
+
+    if (!answer) {
+      return next(createError(404, "Answer not found"));
+    }
+
+    const isDownvoted = answer.isDownvoted.get(userId) || false;
+    const isUpvoted = answer.isUpvoted.get(userId) || false;
+
+    if (isDownvoted) {
+      answer.isDownvoted.set(userId, false);
+      answer.downvote -= 1;
+    }
+
+    if (isUpvoted) {
+      answer.isUpvoted.set(userId, false);
+      answer.upvote -= 1;
+    } else {
+      answer.isUpvoted.set(userId, true);
+      answer.upvote += 1;
+    }
+
+    await answer.save();
+
+    res.status(200).send({
+      message: "Upvoted",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const handleDownVote = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const ansId = req.params.id;
+    const userId = req.userId;
+    if (!userId) {
+      return next(createError(403, "UserId is required"));
+    }
+    const answer = await Answer.findById(ansId);
+
+    if (!answer) {
+      return next(createError(404, "Answer not found"));
+    }
+
+    const isUpvoted = answer.isUpvoted.get(userId) || false;
+    const isDownvoted = answer.isDownvoted.get(userId) || false;
+
+    if (isUpvoted) {
+      answer.isUpvoted.set(userId, false);
+      answer.upvote -= 1;
+    }
+
+    if (isDownvoted) {
+      answer.isDownvoted.set(userId, false);
+      answer.downvote -= 1;
+    } else {
+      answer.isDownvoted.set(userId, true);
+      answer.downvote += 1;
+    }
+
+    await answer.save();
+
+    res.status(200).send({
+      message: "Downvoted",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
