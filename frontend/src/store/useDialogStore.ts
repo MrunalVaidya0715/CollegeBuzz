@@ -11,6 +11,8 @@ interface DialogState {
   setIsAnsQuesOpen: (isOpen: boolean) => void;
   isEditQuesOpen: boolean;
   setIsEditQuesOpen: (isOpen: boolean) => void;
+  isDeleteQuesOpen: boolean;
+  setIsDeleteQuesOpen: (isOpen: boolean) => void;
 }
 
 const useDialogStore = create<DialogState>()((set) => ({
@@ -24,6 +26,8 @@ const useDialogStore = create<DialogState>()((set) => ({
   setIsAnsQuesOpen: (isOpen) => set({ isAnsQuesOpen: isOpen }),
   isEditQuesOpen: false,
   setIsEditQuesOpen: (isOpen) => set({ isEditQuesOpen: isOpen }),
+  isDeleteQuesOpen: false,
+  setIsDeleteQuesOpen: (isOpen) => set({ isDeleteQuesOpen: isOpen }),
 }));
 
 export default useDialogStore;
