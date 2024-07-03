@@ -17,6 +17,12 @@ export interface Answer {
   content: string;
   parentAnswer: string | null;
   replies: Answer[];
+  upvote: number;
+  isUpvoted: Map<string, boolean>;
+  downvote: number;
+  isDownvoted: Map<string, boolean>;
+  report: number;
+  reportedBy: string[];
   createdAt: string;
   updatedAt: string;
   __v: number;
