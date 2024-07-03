@@ -308,8 +308,8 @@ export const editQuestion = async (
     if (!question) {
       return next(createError(404, "Question not found"));
     }
-    
-    if(question.userId._id.toString() !== userId){
+
+    if (question.userId._id.toString() !== userId) {
       return next(createError(401, "Only Question owner can edit"));
     }
 
@@ -325,6 +325,39 @@ export const editQuestion = async (
     res.status(200).send({
       message: "Question updated successfully",
       question: updatedQuestion,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteQuestion = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const quesId = req.params.id;
+    const userId = req.userId;
+
+    if (!mongoose.Types.ObjectId.isValid(quesId)) {
+      return next(createError(404, "Question not found"));
+    }
+
+    const question = await Question.findById(quesId);
+
+    if (!question) {
+      return next(createError(404, "Question not found"));
+    }
+
+    if (question.userId.toString() !== userId) {
+      return next(createError(403, "Only Question owner can delete"));
+    }
+
+    await Question.findByIdAndDelete(quesId);
+
+    res.status(200).send({
+      message: "Question deleted successfully",
     });
   } catch (error) {
     next(error);
