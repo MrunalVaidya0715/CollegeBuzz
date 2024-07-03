@@ -113,7 +113,7 @@ const EditForm = ({ eTitle, eDescription }: EditFormProps) => {
           )}
         />
         <Button
-          disabled={!form.formState.isValid || form.formState.isSubmitting}
+          disabled={!form.formState.isValid || form.formState.isSubmitting || (eTitle === form.getValues().title && eDescription === form.getValues().description)}
           type="submit"
           className="mt-4 w-full disabled:opacity-70"
         >
