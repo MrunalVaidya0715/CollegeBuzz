@@ -35,13 +35,13 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
     setIsEditOpen(true);
   };
 
-  const handleAlertClick = () =>{
+  const handleAlertClick = () => {
     setIsAlertOpen(true);
-  }
+  };
 
-  const handleReplyClick = ()=>{
+  const handleReplyClick = () => {
     setIsReplyOpen(true);
-  }
+  };
 
   return (
     <section className="p-4 w-full flex flex-col gap-2 bg-white border-1 border-gray-300">
@@ -87,7 +87,10 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
                   <RiEditLine className="w-5 h-5" />
                   <p>Edit</p>
                 </div>
-                <div onClick={handleAlertClick} className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600">
+                <div
+                  onClick={handleAlertClick}
+                  className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600"
+                >
                   <RiDeleteBin6Line className="w-5 h-5" />
                   <p>Delete</p>
                 </div>
@@ -107,7 +110,11 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
       />
-      <DeleteAnswerAlert id={answer._id} isOpen={isAlertOpen} setIsOpen={setIsAlertOpen} />
+      <DeleteAnswerAlert
+        id={answer._id}
+        isOpen={isAlertOpen}
+        setIsOpen={setIsAlertOpen}
+      />
       {/* Description */}
       <div className="w-full">
         <div
@@ -116,21 +123,49 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
         ></div>
       </div>
       {/* Upvote and Answer */}
-      <div className="mt-2 w-full flex items-center justify-end gap-4">
-        <Button onClick={handleReplyClick} variant={"ghost"} className=" text-gray-400 hover:text-black gap-2" aria-label="Reply">
-            <BsReply className=" w-6 h-6"/>
+
+      {!answer.parentAnswer && (
+        <div className=" w-full flex items-center justify-end gap-4">
+          <Button
+            onClick={handleReplyClick}
+            variant={"ghost"}
+            className=" text-gray-400 hover:text-black gap-2"
+            aria-label="Reply"
+          >
+            <BsReply className=" w-6 h-6" />
             Reply
-        </Button>
-        {/* Upvote */}
-        <VotesAnswers
-          id={answer._id}
-          upvote={answer.upvote}
-          downvote={answer.downvote}
-          isUpvoted={new Map(Object.entries(answer.isUpvoted))}
-          isDownvoted={new Map(Object.entries(answer.isDownvoted))}
-        />
-      </div>
-      <AnswerReplyDialog id={answer._id} user={{username: answer.userId.username, profileImg: answer.userId.profileImg}} isOpen={isReplyOpen} setIsOpen={setIsReplyOpen} />
+          </Button>
+          {/* Upvote */}
+          <VotesAnswers
+            id={answer._id}
+            upvote={answer.upvote}
+            downvote={answer.downvote}
+            isUpvoted={new Map(Object.entries(answer.isUpvoted))}
+            isDownvoted={new Map(Object.entries(answer.isDownvoted))}
+          />
+        </div>
+      )}
+      {answer.replies.length > 0 && (
+        <div className=" h-[1px] mb-2 bg-gray-300" />
+      )}
+
+      {answer.replies && answer.replies.length > 0 && (
+        <div className=" flex flex-col gap-2">
+          {answer.replies.map((reply) => (
+            <AnswerCard key={reply._id} answer={reply} />
+          ))}
+        </div>
+      )}
+
+      <AnswerReplyDialog
+        id={answer._id}
+        user={{
+          username: answer.userId.username,
+          profileImg: answer.userId.profileImg,
+        }}
+        isOpen={isReplyOpen}
+        setIsOpen={setIsReplyOpen}
+      />
     </section>
   );
 };
