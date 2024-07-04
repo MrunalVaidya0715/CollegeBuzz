@@ -13,6 +13,7 @@ import { TimeAgo } from "@/lib/utils";
 import useAuthStore from "@/store/useAuth";
 import VotesAnswers from "@/components/votes/VotesAnswers";
 import EditAnswerDialog from "@/components/dialogs/EditAnswerDialog";
+import DeleteAnswerAlert from "@/components/dialogs/DeleteAnswerAlert";
 
 interface AnswerCardProps {
   answer: Answer;
@@ -22,12 +23,17 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
   const user = useAuthStore((state) => state.user);
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const sanitizedContent = DOMPurify.sanitize(answer.content || "");
 
   const handleEditClick = () => {
     setIsEditOpen(true);
   };
+
+  const handleAlertClick = () =>{
+    setIsAlertOpen(true);
+  }
 
   return (
     <section className="p-4 w-full flex flex-col gap-2 bg-white border-1 border-gray-300">
@@ -73,7 +79,7 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
                   <RiEditLine className="w-5 h-5" />
                   <p>Edit</p>
                 </div>
-                <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600">
+                <div onClick={handleAlertClick} className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600">
                   <RiDeleteBin6Line className="w-5 h-5" />
                   <p>Delete</p>
                 </div>
@@ -93,6 +99,7 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
       />
+      <DeleteAnswerAlert id={answer._id} isOpen={isAlertOpen} setIsOpen={setIsAlertOpen} />
       {/* Description */}
       <div className="w-full">
         <div
