@@ -1,6 +1,7 @@
 import { MdCircle } from "react-icons/md";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import { RiDeleteBin6Line, RiEditLine, RiFlagLine } from "react-icons/ri";
+import { BsReply } from "react-icons/bs";
 import {
   Popover,
   PopoverContent,
@@ -14,6 +15,8 @@ import useAuthStore from "@/store/useAuth";
 import VotesAnswers from "@/components/votes/VotesAnswers";
 import EditAnswerDialog from "@/components/dialogs/EditAnswerDialog";
 import DeleteAnswerAlert from "@/components/dialogs/DeleteAnswerAlert";
+import { Button } from "@/components/ui/button";
+import AnswerReplyDialog from "@/components/dialogs/AnswerReplyDialog";
 
 interface AnswerCardProps {
   answer: Answer;
@@ -24,6 +27,7 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [isReplyOpen, setIsReplyOpen] = useState(false);
 
   const sanitizedContent = DOMPurify.sanitize(answer.content || "");
 
@@ -33,6 +37,10 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
 
   const handleAlertClick = () =>{
     setIsAlertOpen(true);
+  }
+
+  const handleReplyClick = ()=>{
+    setIsReplyOpen(true);
   }
 
   return (
@@ -108,7 +116,11 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
         ></div>
       </div>
       {/* Upvote and Answer */}
-      <div className="mt-2 w-full flex items-center justify-end gap-2">
+      <div className="mt-2 w-full flex items-center justify-end gap-4">
+        <Button onClick={handleReplyClick} variant={"ghost"} className=" text-gray-400 hover:text-black gap-2" aria-label="Reply">
+            <BsReply className=" w-6 h-6"/>
+            Reply
+        </Button>
         {/* Upvote */}
         <VotesAnswers
           id={answer._id}
@@ -118,6 +130,7 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
           isDownvoted={new Map(Object.entries(answer.isDownvoted))}
         />
       </div>
+      <AnswerReplyDialog id={answer._id} user={{username: answer.userId.username, profileImg: answer.userId.profileImg}} isOpen={isReplyOpen} setIsOpen={setIsReplyOpen} />
     </section>
   );
 };
