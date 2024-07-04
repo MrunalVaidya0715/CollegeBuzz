@@ -53,10 +53,18 @@ export const getAnswers = async (
     const answers = await Answer.find({
       questionId: quesId,
       parentAnswer: null,
-    }).populate({
-      path: "userId",
-      select: "username profileImg",
-    });
+    })
+      .populate({
+        path: "userId",
+        select: "username profileImg",
+      })
+      .populate({
+        path: "replies",
+        populate: {
+          path: "userId",
+          select: "username profileImg",
+        },
+      });
 
     res.status(200).send(answers);
   } catch (error) {
@@ -175,7 +183,6 @@ export const editAnswer = async (
     }
 
     if (content) answer.content = content;
-    
 
     const updatedAnswer = await answer.save();
 
