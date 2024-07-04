@@ -187,3 +187,36 @@ export const editAnswer = async (
     next(error);
   }
 };
+
+export const deleteAnswer = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const ansId = req.params.id;
+    const userId = req.userId;
+
+    if (!mongoose.Types.ObjectId.isValid(ansId)) {
+      return next(createError(404, "Answer not found"));
+    }
+
+    const answer = await Answer.findById(ansId);
+
+    if (!answer) {
+      return next(createError(404, "Answer not found"));
+    }
+
+    if (answer.userId.toString() !== userId) {
+      return next(createError(403, "Only Answer owner can delete"));
+    }
+
+    await Answer.findByIdAndDelete(ansId);
+
+    res.status(200).send({
+      message: "Answer deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
