@@ -150,7 +150,7 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
       )}
 
       {answer.replies && answer.replies.length > 0 && (
-        <div className=" flex flex-col gap-2">
+        <div className="pl-4 md:pl-8 flex flex-col gap-4">
           {answer.replies.map((reply) => (
             <AnswerCard key={reply._id} answer={reply} />
           ))}
