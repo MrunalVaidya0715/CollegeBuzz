@@ -102,7 +102,7 @@ export const getQuestions = async (
       filter.category = category;
     }
 
-    let sortOptions: any = { createdAt: -1 }; // Default to latest
+    let sortOptions: any = { createdAt: -1 }; 
 
     switch (sortBy) {
       case "oldest":
@@ -359,6 +359,78 @@ export const deleteQuestion = async (
     res.status(200).send({
       message: "Question deleted successfully",
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const getQuestionsToContribute = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { branch = "All", category = "all", sortBy = "latest" } = req.query;
+
+    const filter: any = {};
+
+    if (branch !== "All") {
+      filter.branch = branch;
+    }
+
+    if (category !== "all") {
+      filter.category = category;
+    }
+
+    let sortOptions: any = { createdAt: 1 };
+
+    switch (sortBy) {
+      case "oldest":
+        sortOptions = { createdAt: 1 };
+        break;
+      case "votesHighToLow":
+        sortOptions = { vote: -1 };
+        break;
+      case "votesLowToHigh":
+        sortOptions = { vote: 1 };
+        break;
+      default:
+        break;
+    }
+
+    const questions = await Question.aggregate([
+      { $match: filter },
+      {
+        $addFields: {
+          vote: { $subtract: ["$upvote", "$downvote"] },
+        },
+      },
+      { $sort: sortOptions },
+      {
+        $project: {
+          embedding: 0,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userId",
+        },
+      },
+      {
+        $unwind: "$userId",
+      },
+      {
+        $match: {
+          answers: { $exists: true, $size: 0 }, 
+        },
+      },
+    ]);
+
+    res.status(200).send(questions);
   } catch (error) {
     next(error);
   }
