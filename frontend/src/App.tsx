@@ -9,6 +9,7 @@ import ScrollToTopOnPageChange from "./lib/utils";
 import Explore from "./pages/explore/Explore";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "./components/ui/toaster";
+import Contribute from "./pages/contribute/Contribute";
 
 function App() {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -25,6 +26,7 @@ function App() {
                   <Route path="" element={<Posts />} />
                   <Route path="posts/:id" element={<PostDetail />} />
                   <Route path="explore" element={<Explore />} />
+                  <Route path="contribute" element={<Contribute />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
