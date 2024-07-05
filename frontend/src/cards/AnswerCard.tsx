@@ -17,6 +17,7 @@ import EditAnswerDialog from "@/components/dialogs/EditAnswerDialog";
 import DeleteAnswerAlert from "@/components/dialogs/DeleteAnswerAlert";
 import { Button } from "@/components/ui/button";
 import AnswerReplyDialog from "@/components/dialogs/AnswerReplyDialog";
+import { Link } from "react-router-dom";
 
 interface AnswerCardProps {
   answer: Answer;
@@ -50,18 +51,20 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
         {/* User */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
-            <div className="w-[30px] aspect-square rounded-full overflow-hidden bottom-1 border-gray-200">
-              <img
-                className="w-full h-full object-cover object-center"
-                src={answer.userId.profileImg || "/assets/no-profile.png"}
-                alt={answer.userId.username}
-              />
-            </div>
-            <h2 className="text-blue-500 text-sm font-medium">
-              {user && answer.userId._id === user?._id
-                ? "You"
-                : answer.userId.username}
-            </h2>
+            <Link to={`/profile/${answer.userId._id}`}>
+              <div className="w-[30px] aspect-square rounded-full overflow-hidden bottom-1 border-gray-200">
+                <img
+                  className="w-full h-full object-cover object-center"
+                  src={answer.userId.profileImg || "/assets/no-profile.png"}
+                  alt={answer.userId.username}
+                />
+              </div>
+              <h2 className="text-blue-500 text-sm font-medium">
+                {user && answer.userId._id === user?._id
+                  ? "You"
+                  : answer.userId.username}
+              </h2>
+            </Link>
           </div>
           <MdCircle className="w-2 h-2 text-gray-300" />
           <p className="text-gray-500 text-sm">{TimeAgo(answer.createdAt)}</p>
