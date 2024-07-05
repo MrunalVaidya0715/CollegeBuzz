@@ -11,6 +11,7 @@ import ProfileQuesSkeleton from "@/components/skeletons/ProfileQuesSkeleton";
 import NoData from "@/components/queryStates/NoData";
 import ProfileAnsCard from "@/cards/ProfileAnsCard";
 import ProfileAnsSkeleton from "@/components/skeletons/ProfileAnsSkeleton";
+import { useState } from "react";
 
 export interface ProfileQuestion {
   _id: string;
@@ -36,6 +37,7 @@ export interface ProfileAnswer {
 
 const Profile = () => {
   const { userId } = useParams();
+  const [tabValue, setTabValue] = useState("questions");
   const {
     data: user,
     isLoading: isUserLoading,
@@ -71,6 +73,8 @@ const Profile = () => {
       apiRequest.get(`users/profile-answers/${userId}`).then((res) => {
         return res.data;
       }),
+    enabled: tabValue === "answers",
+    staleTime: Infinity
   });
   return (
     <section className=" pt-2 w-full flex flex-col">
@@ -110,15 +114,17 @@ const Profile = () => {
           </div>
         )}
       </div>
-      <Tabs defaultValue="questions" className="w-full mt-1">
+      <Tabs value={tabValue} className="w-full mt-1">
         <TabsList className="h-12 w-full px-0 gap-2">
           <TabsTrigger
+            onClick={() => setTabValue("questions")}
             className=" h-full w-full data-[state=active]:bg-gradient-to-b from-blue-400 to-blue-600 data-[state=active]:text-white"
             value="questions"
           >
             Questions
           </TabsTrigger>
           <TabsTrigger
+            onClick={() => setTabValue("answers")}
             className=" h-full w-full data-[state=active]:bg-gradient-to-b from-blue-400 to-blue-600 data-[state=active]:text-white"
             value="answers"
           >
