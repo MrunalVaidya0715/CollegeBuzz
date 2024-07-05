@@ -105,7 +105,7 @@ const Navbar = () => {
                       </Link>
                     ))}
 
-                    <Link onClick={() => setIsPopOpen(false)} to={"/profile"}>
+                    <Link onClick={() => setIsPopOpen(false)} to={`/profile/${user._id}`}>
                       <li className=" group p-2 text-sm md:text-base font-medium w-full hover:bg-gray-100 flex gap-2 text-gray-400 items-center transition-all duration-200 ease-in-out">
                         <span className="group-hover:text-gray-800">
                           <CgProfile size={22} />
