@@ -35,3 +35,21 @@ export const getUserProfileQuestions = async (
     next(error);
   }
 };
+
+export const getUserProfileAnswers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const userId = req.params.userId;
+      const answers = await Answer.find({ userId: userId })
+        .select(" upvote downvote createdAt")
+        .populate("userId")
+        .populate({path: "questionId", select: "title"})
+        .sort({ createdAt: -1 });
+      res.status(200).send(answers);
+    } catch (error) {
+      next(error);
+    }
+  };
