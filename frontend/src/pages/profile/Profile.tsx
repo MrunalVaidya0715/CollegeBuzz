@@ -75,7 +75,7 @@ const Profile = () => {
   return (
     <section className=" pt-2 w-full flex flex-col">
       {/* Profile Img */}
-      <div className="p-2 w-full min-h-[300px] flex flex-col items-center justify-center bg-gradient-to-b from-blue-100 via-blue-200 to-blue-400">
+      <div className="p-2 w-full min-h-[250px] flex flex-col items-center justify-center bg-gradient-to-b from-blue-100 via-blue-200 to-blue-400">
         {isUserLoading ? (
           <div className=" flex flex-col items-center gap-2">
             <div className=" w-[100px] aspect-square bg-white/80 border-1 border-gray-500 rounded-full overflow-hidden">
