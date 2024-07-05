@@ -9,6 +9,8 @@ import { TimeAgo } from "@/lib/utils";
 import ProfileQuesCard from "@/cards/ProfileQuesCard";
 import ProfileQuesSkeleton from "@/components/skeletons/ProfileQuesSkeleton";
 import NoData from "@/components/queryStates/NoData";
+import ProfileAnsCard from "@/cards/ProfileAnsCard";
+import ProfileAnsSkeleton from "@/components/skeletons/ProfileAnsSkeleton";
 
 export interface ProfileQuestion {
   _id: string;
@@ -18,6 +20,18 @@ export interface ProfileQuestion {
   upvote: number;
   downvote: number;
   createdAt: string;
+}
+
+export interface ProfileAnswer {
+  _id: string;
+  questionId: {
+    _id: string;
+    title: string;
+  };
+  upvote: number;
+  downvote: number;
+  createdAt: string;
+  content: string;
 }
 
 const Profile = () => {
@@ -43,6 +57,18 @@ const Profile = () => {
     queryKey: [`userQuestions.${userId}`],
     queryFn: () =>
       apiRequest.get(`users/profile-questions/${userId}`).then((res) => {
+        return res.data;
+      }),
+  });
+  const {
+    data: answers,
+    isLoading: isAnsLoading,
+    error: ansError,
+    refetch: ansRefetch,
+  } = useQuery<ProfileAnswer[]>({
+    queryKey: [`userAnswers.${userId}`],
+    queryFn: () =>
+      apiRequest.get(`users/profile-answers/${userId}`).then((res) => {
         return res.data;
       }),
   });
@@ -107,8 +133,8 @@ const Profile = () => {
             Array(2)
               .fill(null)
               .map((_, index) => <ProfileQuesSkeleton key={index} />)
-          ) : quesError ? (
-            <Retry refetch={quesRefetch} className=" min-h-[150px]" />
+          ) : ansError ? (
+            <Retry refetch={ansRefetch} className=" min-h-[150px]" />
           ) : questions?.length === 0 ? (
             <NoData message="No Question Raised" className=" min-h-[150px]" />
           ) : (
@@ -117,7 +143,24 @@ const Profile = () => {
             ))
           )}
         </TabsContent>
-        <TabsContent value="answers">Answers</TabsContent>
+        <TabsContent
+          value="answers"
+          className=" w-full flex flex-col gap-2 lg:gap-4"
+        >
+          {isAnsLoading ? (
+            Array(2)
+              .fill(null)
+              .map((_, index) => <ProfileAnsSkeleton key={index} />)
+          ) : quesError ? (
+            <Retry refetch={quesRefetch} className=" min-h-[150px]" />
+          ) : answers?.length === 0 ? (
+            <NoData message="No Answers yet" className=" min-h-[150px]" />
+          ) : (
+            answers?.map((answer) => (
+              <ProfileAnsCard key={answer._id} answer={answer} />
+            ))
+          )}
+        </TabsContent>
       </Tabs>
     </section>
   );
