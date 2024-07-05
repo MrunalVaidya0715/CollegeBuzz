@@ -27,7 +27,7 @@ export const getUserProfileQuestions = async (
   try {
     const userId = req.params.userId;
     const questions = await Question.find({ userId: userId })
-      .select("-embedding")
+      .select("title branch category upvote downvote createdAt")
       .populate("userId")
       .sort({ createdAt: -1 });
     res.status(200).send(questions);
