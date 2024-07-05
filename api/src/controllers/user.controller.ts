@@ -12,7 +12,9 @@ export const getUser = async (
 ) => {
   try {
     const userId = req.params.userId;
-    const user = await User.findById(userId).select("username profileImg createdAt");
+    const user = await User.findById(userId).select(
+      "username profileImg createdAt"
+    );
     res.status(200).send(user);
   } catch (error) {
     next(error);
@@ -37,19 +39,18 @@ export const getUserProfileQuestions = async (
 };
 
 export const getUserProfileAnswers = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
-    try {
-      const userId = req.params.userId;
-      const answers = await Answer.find({ userId: userId })
-        .select(" upvote downvote createdAt")
-        .populate("userId")
-        .populate({path: "questionId", select: "title"})
-        .sort({ createdAt: -1 });
-      res.status(200).send(answers);
-    } catch (error) {
-      next(error);
-    }
-  };
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.userId;
+    const answers = await Answer.find({ userId: userId, parentAnswer: null })
+      .select("content upvote downvote createdAt")
+      .populate({ path: "questionId", select: "title" })
+      .sort({ createdAt: -1 });
+    res.status(200).send(answers);
+  } catch (error) {
+    next(error);
+  }
+};
