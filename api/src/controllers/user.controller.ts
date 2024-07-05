@@ -30,7 +30,7 @@ export const getUserProfileQuestions = async (
     const userId = req.params.userId;
     const questions = await Question.find({ userId: userId })
       .select("title branch category upvote downvote createdAt")
-      .populate("userId")
+      .populate({ path: "userId", select: "username profileImg" })
       .sort({ createdAt: -1 });
     res.status(200).send(questions);
   } catch (error) {
