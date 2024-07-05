@@ -12,7 +12,7 @@ const ProfileQuesCard = ({ question }: ProfileQuesCardProps) => {
     const vote = question.upvote - question.downvote;
   return (
     <Link to={`/posts/${question._id}`}>
-      <section className="p-4 w-full flex flex-col gap-2 bg-white border-1 border-gray-200">
+      <section className="p-4 w-full flex flex-col gap-2 bg-white border-1 border-gray-200 hover:border-gray-500 transition-all duration-200 ease-in-out">
         <div className="w-full flex items-center justify-between gap-2">
           <div
             className="px-4 py-1 w-fit rounded-full"
