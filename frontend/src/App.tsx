@@ -11,6 +11,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "./components/ui/toaster";
 import Contribute from "./pages/contribute/Contribute";
 import MyQuestions from "./pages/my-questions/MyQuestions";
+import Profile from "./pages/profile/Profile";
 
 function App() {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -29,6 +30,7 @@ function App() {
                   <Route path="explore" element={<Explore />} />
                   <Route path="contribute" element={<Contribute />} />
                   <Route path="my-questions" element={<MyQuestions />} />
+                  <Route path="profile/:userId" element={<Profile />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
