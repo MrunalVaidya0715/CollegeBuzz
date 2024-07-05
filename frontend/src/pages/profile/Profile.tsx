@@ -118,14 +118,14 @@ const Profile = () => {
         <TabsList className="h-12 w-full px-0 gap-2">
           <TabsTrigger
             onClick={() => setTabValue("questions")}
-            className=" h-full w-full data-[state=active]:bg-gradient-to-b from-blue-400 to-blue-600 data-[state=active]:text-white"
+            className=" h-full w-full bg-slate-200 data-[state=active]:bg-gradient-to-b from-blue-400 to-blue-600 data-[state=active]:text-white"
             value="questions"
           >
             Questions
           </TabsTrigger>
           <TabsTrigger
             onClick={() => setTabValue("answers")}
-            className=" h-full w-full data-[state=active]:bg-gradient-to-b from-blue-400 to-blue-600 data-[state=active]:text-white"
+            className=" h-full w-full bg-slate-200 data-[state=active]:bg-gradient-to-b from-blue-400 to-blue-600 data-[state=active]:text-white"
             value="answers"
           >
             Answers
