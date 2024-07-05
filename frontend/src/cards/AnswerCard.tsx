@@ -50,8 +50,8 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
       <div className="pb-2 flex items-center justify-between gap-2 border-b-1 border-gray-200">
         {/* User */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2">
-            <Link to={`/profile/${answer.userId._id}`}>
+          <Link to={`/profile/${answer.userId._id}`}>
+            <div className="flex items-center gap-2">
               <div className="w-[30px] aspect-square rounded-full overflow-hidden bottom-1 border-gray-200">
                 <img
                   className="w-full h-full object-cover object-center"
@@ -64,8 +64,8 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
                   ? "You"
                   : answer.userId.username}
               </h2>
-            </Link>
-          </div>
+            </div>
+          </Link>
           <MdCircle className="w-2 h-2 text-gray-300" />
           <p className="text-gray-500 text-sm">{TimeAgo(answer.createdAt)}</p>
         </div>
