@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createQuestion, deleteQuestion, editQuestion, embedQuestion, getQuestionById, getQuestions, getQuestionsToContribute, getSimilarQuestions, getTopQuestions, handleDownVote, handleUpVote } from '../controllers/question.controller';
+import { createQuestion, deleteQuestion, editQuestion, embedQuestion, getQuestionById, getQuestions, getQuestionsToContribute, getSimilarQuestions, getTopQuestions, getUserQuestions, handleDownVote, handleUpVote } from '../controllers/question.controller';
 import { verifyToken } from '../middleware/jwt';
 const router  = Router()
 
@@ -10,6 +10,7 @@ router.put('/upvote/:id', verifyToken, handleUpVote);
 router.put('/downvote/:id', verifyToken, handleDownVote);
 router.put('/edit/:id', verifyToken, editQuestion);
 router.delete('/delete/:id', verifyToken, deleteQuestion);
+router.get('/my-questions', verifyToken, getUserQuestions);
 router.get('/contribute', getQuestionsToContribute)
 router.get('/top-questions', getTopQuestions)
 router.get('/single/:id', getQuestionById)

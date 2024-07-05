@@ -435,3 +435,17 @@ export const getQuestionsToContribute = async (
     next(error);
   }
 };
+
+export const getUserQuestions = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.userId;
+    const questions = await Question.find({userId: userId}).select("-embedding").populate("userId").sort({createdAt: -1});
+    res.status(200).send(questions);
+  } catch (error) {
+    next(error)
+  }
+}
