@@ -55,7 +55,7 @@ const Section = () => {
       />
 
       <TopQuestions />
-      <WordFilter />
+      {user && <WordFilter />}
     </aside>
   );
 };
