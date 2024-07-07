@@ -1,9 +1,9 @@
 import { BsInfoCircleFill } from "react-icons/bs";
 import TooltipUtil from "../ui/TooltipUtil";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { IoMdAdd, IoMdRemove } from "react-icons/io";
+import { IoMdRemove } from "react-icons/io";
 import { useState } from "react";
+import AddWordForm from "../forms/AddWordForm";
 const WordFilter = () => {
   const [isManage, setIsManage] = useState(false);
   return (
@@ -35,15 +35,7 @@ const WordFilter = () => {
               ))}
           </div>
         ) : (
-          <div className=" flex items-center">
-            <Input className="border-gray-200 rounded-l-md rounded-r-none focus-visible:ring-1" />
-            <Button
-              className=" w-fit aspect-square p-0 bg-blue-600 hover:bg-blue-800 rounded-r-md rounded-l-none"
-              aria-label="Add Word"
-            >
-              <IoMdAdd className=" w-5 h-5" />
-            </Button>
-          </div>
+          <AddWordForm />
         )}
 
         <p
