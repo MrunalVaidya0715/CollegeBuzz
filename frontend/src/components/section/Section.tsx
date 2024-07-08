@@ -2,7 +2,6 @@ import { Button } from "../ui/button";
 import { IoMdAdd } from "react-icons/io";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import TopQuestions from "./TopQuestions";
-import WordFilter from "./WordFilter";
 import { useState } from "react";
 import QuestionDialog from "../dialogs/QuestionDialog";
 import useAuthStore from "@/store/useAuth";
@@ -55,7 +54,6 @@ const Section = () => {
       />
 
       <TopQuestions />
-      {user && <WordFilter />}
     </aside>
   );
 };
