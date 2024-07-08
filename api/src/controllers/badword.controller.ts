@@ -19,3 +19,23 @@ export const addWord = async (
     next(error);
   }
 };
+
+export const getWords = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.query;
+    const approvedWords = await Badword.find({ isApproved: true });
+    if (userId) {
+      const userWords = await Badword.find({ userId: userId });
+      return res
+        .status(200)
+        .send({ approvedWords: approvedWords, userWords: userWords });
+    }
+    res.status(200).send({ approvedWords: approvedWords });
+  } catch (error) {
+    next(error);
+  }
+};
