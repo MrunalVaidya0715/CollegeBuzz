@@ -17,19 +17,26 @@ import EditAnswerDialog from "@/components/dialogs/EditAnswerDialog";
 import DeleteAnswerAlert from "@/components/dialogs/DeleteAnswerAlert";
 import { Button } from "@/components/ui/button";
 import AnswerReplyDialog from "@/components/dialogs/AnswerReplyDialog";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import ReportAnswerDialog from "@/components/dialogs/ReportAnswerDialog";
+import { useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
+import apiRequest from "@/lib/apiRequest";
 
 interface AnswerCardProps {
   answer: Answer;
 }
 
 const AnswerCard = ({ answer }: AnswerCardProps) => {
+  const { id } = useParams();
   const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
+  const {toast} = useToast();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
-
+  const [isReportOpen, setIsReportOpen] = useState(false);
   const sanitizedContent = DOMPurify.sanitize(answer.content || "");
 
   const handleEditClick = () => {
@@ -44,8 +51,41 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
     setIsReplyOpen(true);
   };
 
+  const handleReportClick = () => {
+    setIsReportOpen(true);
+  };
+  const hasReported = answer.reportedBy.some(
+    (report) => report.userId === user?._id
+  );
+  async function handleWithdrawReport() {
+    try {
+      const res = await apiRequest.put(`answers/report/${answer._id}`);
+      if (res.data.message === "Answer Unreported") {
+        queryClient.invalidateQueries({ queryKey: [`answers.${id}`] });
+        toast({ title: res.data.message });
+        setIsActionsOpen(false);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Couldn't Withdraw Answer",
+          description: "Please try again.",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again!",
+      });
+      console.log(error);
+    }
+  }
   return (
-    <section className="p-4 w-full flex flex-col gap-2 bg-white border-1 border-gray-300">
+    <section
+      className={`p-4 w-full flex flex-col gap-2 bg-white ${
+        hasReported ? "border-1 border-red-500" : "border-1 border-gray-300"
+      } `}
+    >
       {/* User, Action */}
       <div className="pb-2 flex items-center justify-between gap-2 border-b-1 border-gray-200">
         {/* User */}
@@ -98,10 +138,21 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
                   <p>Delete</p>
                 </div>
               </>
-            ) : (
-              <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
+            ) : hasReported ? (
+              <div
+                onClick={handleWithdrawReport}
+                className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
+              >
                 <RiFlagLine className="w-5 h-5" />
-                <p className="whitespace-nowrap">Report Post</p>
+                <p className="whitespace-nowrap">Withdraw Report</p>
+              </div>
+            ) : (
+              <div
+                onClick={handleReportClick}
+                className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
+              >
+                <RiFlagLine className="w-5 h-5" />
+                <p className="whitespace-nowrap">Report Answer</p>
               </div>
             )}
           </PopoverContent>
@@ -117,6 +168,11 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
         id={answer._id}
         isOpen={isAlertOpen}
         setIsOpen={setIsAlertOpen}
+      />
+      <ReportAnswerDialog
+        isOpen={isReportOpen}
+        setIsOpen={setIsReportOpen}
+        id={answer._id}
       />
       {/* Description */}
       <div className="w-full">

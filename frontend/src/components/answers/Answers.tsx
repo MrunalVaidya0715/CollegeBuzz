@@ -22,7 +22,7 @@ export interface Answer {
   downvote: number;
   isDownvoted: Map<string, boolean>;
   report: number;
-  reportedBy: string[];
+  reportedBy: { userId: string; reason: string }[];
   createdAt: string;
   updatedAt: string;
   __v: number;
