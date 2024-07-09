@@ -22,6 +22,7 @@ import ReportAnswerDialog from "@/components/dialogs/ReportAnswerDialog";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import apiRequest from "@/lib/apiRequest";
+import useDialogStore from "@/store/useDialogStore";
 
 interface AnswerCardProps {
   answer: Answer;
@@ -31,12 +32,13 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
   const { id } = useParams();
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
-  const {toast} = useToast();
+  const { toast } = useToast();
   const [isActionsOpen, setIsActionsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const { setIsLoginOpen } = useDialogStore();
   const sanitizedContent = DOMPurify.sanitize(answer.content || "");
 
   const handleEditClick = () => {
@@ -48,7 +50,11 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
   };
 
   const handleReplyClick = () => {
-    setIsReplyOpen(true);
+    if (user) {
+      setIsReplyOpen(true);
+    } else {
+      setIsLoginOpen(true);
+    }
   };
 
   const handleReportClick = () => {
@@ -110,53 +116,55 @@ const AnswerCard = ({ answer }: AnswerCardProps) => {
           <p className="text-gray-500 text-sm">{TimeAgo(answer.createdAt)}</p>
         </div>
         {/* Action */}
-        <Popover open={isActionsOpen} onOpenChange={setIsActionsOpen}>
-          <PopoverTrigger>
-            <div
-              className={`cursor-pointer w-fit aspect-square ${
-                isActionsOpen ? "text-black bg-gray-200/80" : "text-gray-400"
-              } hover:text-black rounded-full`}
-            >
-              <IoEllipsisVerticalSharp className="w-6 h-6 transition-colors duration-200 ease-in-out" />
-            </div>
-          </PopoverTrigger>
-          <PopoverContent className="absolute -right-1 flex flex-col gap-3 max-w-fit">
-            {user?._id === answer.userId._id ? (
-              <>
+        {user && (
+          <Popover open={isActionsOpen} onOpenChange={setIsActionsOpen}>
+            <PopoverTrigger>
+              <div
+                className={`cursor-pointer w-fit aspect-square ${
+                  isActionsOpen ? "text-black bg-gray-200/80" : "text-gray-400"
+                } hover:text-black rounded-full`}
+              >
+                <IoEllipsisVerticalSharp className="w-6 h-6 transition-colors duration-200 ease-in-out" />
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="absolute -right-1 flex flex-col gap-3 max-w-fit">
+              {user?._id === answer.userId._id ? (
+                <>
+                  <div
+                    onClick={handleEditClick}
+                    className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
+                  >
+                    <RiEditLine className="w-5 h-5" />
+                    <p>Edit</p>
+                  </div>
+                  <div
+                    onClick={handleAlertClick}
+                    className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600"
+                  >
+                    <RiDeleteBin6Line className="w-5 h-5" />
+                    <p>Delete</p>
+                  </div>
+                </>
+              ) : hasReported ? (
                 <div
-                  onClick={handleEditClick}
+                  onClick={handleWithdrawReport}
                   className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
                 >
-                  <RiEditLine className="w-5 h-5" />
-                  <p>Edit</p>
+                  <RiFlagLine className="w-5 h-5" />
+                  <p className="whitespace-nowrap">Withdraw Report</p>
                 </div>
+              ) : (
                 <div
-                  onClick={handleAlertClick}
-                  className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600"
+                  onClick={handleReportClick}
+                  className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
                 >
-                  <RiDeleteBin6Line className="w-5 h-5" />
-                  <p>Delete</p>
+                  <RiFlagLine className="w-5 h-5" />
+                  <p className="whitespace-nowrap">Report Answer</p>
                 </div>
-              </>
-            ) : hasReported ? (
-              <div
-                onClick={handleWithdrawReport}
-                className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
-              >
-                <RiFlagLine className="w-5 h-5" />
-                <p className="whitespace-nowrap">Withdraw Report</p>
-              </div>
-            ) : (
-              <div
-                onClick={handleReportClick}
-                className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
-              >
-                <RiFlagLine className="w-5 h-5" />
-                <p className="whitespace-nowrap">Report Answer</p>
-              </div>
-            )}
-          </PopoverContent>
-        </Popover>
+              )}
+            </PopoverContent>
+          </Popover>
+        )}
       </div>
       {/* EditAnswerDialog */}
       <EditAnswerDialog

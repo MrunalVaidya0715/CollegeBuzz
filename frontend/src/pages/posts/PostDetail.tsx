@@ -87,7 +87,9 @@ const PostDetail = () => {
       ) : (
         <section
           className={`p-4 w-full flex flex-col gap-2 bg-white ${
-            hasReported ? "border-1 border-red-500 opacity-70" : "border-1 border-gray-300"
+            hasReported
+              ? "border-1 border-red-500 opacity-70"
+              : "border-1 border-gray-300"
           } `}
         >
           {/* User, Action */}
@@ -118,55 +120,57 @@ const PostDetail = () => {
               )}
             </div>
             {/* Action */}
-            <Popover open={isActionsOpen} onOpenChange={setIsActionsOpen}>
-              <PopoverTrigger>
-                <div
-                  className={`cursor-pointer w-fit aspect-square ${
-                    isActionsOpen
-                      ? "text-black bg-gray-200/80"
-                      : "text-gray-400"
-                  }  hover:text-black  rounded-full  `}
-                >
-                  <IoEllipsisVerticalSharp className=" w-6 h-6 transition-colors duration-200 ease-in-out" />
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="absolute -right-1 flex flex-col gap-3 max-w-fit">
-                {user?._id === post?.userId._id ? (
-                  <>
+            {user && (
+              <Popover open={isActionsOpen} onOpenChange={setIsActionsOpen}>
+                <PopoverTrigger>
+                  <div
+                    className={`cursor-pointer w-fit aspect-square ${
+                      isActionsOpen
+                        ? "text-black bg-gray-200/80"
+                        : "text-gray-400"
+                    }  hover:text-black  rounded-full  `}
+                  >
+                    <IoEllipsisVerticalSharp className=" w-6 h-6 transition-colors duration-200 ease-in-out" />
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent className="absolute -right-1 flex flex-col gap-3 max-w-fit">
+                  {user?._id === post?.userId._id ? (
+                    <>
+                      <div
+                        onClick={() => setIsEditQuesOpen(true)}
+                        className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
+                      >
+                        <RiEditLine className=" w-5 h-5" />
+                        <p>Edit</p>
+                      </div>
+                      <div
+                        onClick={() => setIsDeleteQuesOpen(true)}
+                        className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600"
+                      >
+                        <RiDeleteBin6Line className=" w-5 h-5" />
+                        <p>Delete</p>
+                      </div>
+                    </>
+                  ) : hasReported ? (
                     <div
-                      onClick={() => setIsEditQuesOpen(true)}
+                      onClick={handleUnReport}
                       className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
                     >
-                      <RiEditLine className=" w-5 h-5" />
-                      <p>Edit</p>
+                      <RiFlagLine className=" w-5 h-5" />
+                      <p className=" whitespace-nowrap">Withdraw Report</p>
                     </div>
+                  ) : (
                     <div
-                      onClick={() => setIsDeleteQuesOpen(true)}
-                      className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600"
+                      onClick={() => setIsReportOpen(true)}
+                      className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
                     >
-                      <RiDeleteBin6Line className=" w-5 h-5" />
-                      <p>Delete</p>
+                      <RiFlagLine className=" w-5 h-5" />
+                      <p className=" whitespace-nowrap">Report Post</p>
                     </div>
-                  </>
-                ) : hasReported ? (
-                  <div
-                    onClick={handleUnReport}
-                    className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
-                  >
-                    <RiFlagLine className=" w-5 h-5" />
-                    <p className=" whitespace-nowrap">Withdraw Report</p>
-                  </div>
-                ) : (
-                  <div
-                    onClick={() => setIsReportOpen(true)}
-                    className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
-                  >
-                    <RiFlagLine className=" w-5 h-5" />
-                    <p className=" whitespace-nowrap">Report Post</p>
-                  </div>
-                )}
-              </PopoverContent>
-            </Popover>
+                  )}
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
           {/* Edit Dialog, Delete Action, Report Action */}
           <EditDialog
