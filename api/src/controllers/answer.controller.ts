@@ -227,3 +227,36 @@ export const deleteAnswer = async (
     next(error);
   }
 };
+
+export const handleAnswerReport = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const getAnswersId = req.params.id;
+    const userId = req.userId;
+    if (!userId) {
+      return next(createError(401, "UserId is required"));
+    }
+    const { reason } = req.body;
+    const answer = await Answer.findById(getAnswersId);
+    if (!answer) {
+      return next(createError(404, "Answer not found"));
+    }
+    let isPresent = answer.reportedBy.some((report) => report.userId.toString() === userId);
+    if (isPresent) {
+      answer.reportedBy = answer.reportedBy.filter(
+        (report) => report.userId.toString() !== userId
+      );
+      answer.report -= 1;
+    } else {
+      answer.reportedBy.push({ userId: new mongoose.Types.ObjectId(userId), reason });
+      answer.report += 1;
+    }
+    await answer.save();
+    res.status(200).send({ message: `${isPresent ? "Answer Unreported" : "Answer Reported"}` });
+  } catch (error) {
+    next(error);
+  }
+};
