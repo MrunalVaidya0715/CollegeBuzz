@@ -129,6 +129,11 @@ export const getQuestions = async (
       {
         $project: {
           embedding: 0,
+          isUpvoted: 0,
+          isDownvoted: 0,
+          report: 0,
+          reportedBy: 0,
+          answers: 0
         },
       },
       {
@@ -409,6 +414,10 @@ export const getQuestionsToContribute = async (
       {
         $project: {
           embedding: 0,
+          report: 0,
+          reportedBy: 0,
+          isUpvoted: 0,
+          isDownvoted: 0
         },
       },
       {
