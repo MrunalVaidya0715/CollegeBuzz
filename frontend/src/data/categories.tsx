@@ -103,3 +103,34 @@ export const ReportReasons = [
     reason: "Other"
   },
 ]
+
+export const ReportAnswersReasons = [
+  {
+    id: 1,
+    reason: "Spam: This answer contains promotional or irrelevant content."
+  },
+  {
+    id: 2,
+    reason: "Inappropriate Language: This answer includes offensive or abusive language."
+  },
+  {
+    id: 3,
+    reason: "Off-topic: This answer is not related to the subject or forum category."
+  },
+  {
+    id: 4,
+    reason: "Plagiarism: This answer appears to be copied from another source without proper attribution."
+  },
+  {
+    id: 5,
+    reason: "Incorrect Information: This answer provides incorrect or misleading information."
+  },
+  {
+    id: 6,
+    reason: "Harassment: This answer targets or harasses an individual or group."
+  },
+  {
+    id: 7,
+    reason: "Other"
+  },
+]
