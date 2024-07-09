@@ -12,7 +12,7 @@ import Answers from "@/components/answers/Answers";
 import { Post } from "./Posts";
 import { Link, useParams } from "react-router-dom";
 import apiRequest from "@/lib/apiRequest";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PostDetailSkeleton from "@/components/skeletons/PostDetailSkeleton";
 import Retry from "@/components/queryStates/Retry";
 import { TimeAgo, getColor } from "@/lib/utils";
@@ -23,10 +23,19 @@ import useDialogStore from "@/store/useDialogStore";
 import AnswerDialog from "@/components/dialogs/AnswerDialog";
 import EditDialog from "@/components/dialogs/EditDialog";
 import DeleteAlertDialog from "@/components/dialogs/DeleteAlertDialog";
+import ReportDialog from "@/components/dialogs/ReportDialog";
+import { useToast } from "@/components/ui/use-toast";
 
 const PostDetail = () => {
   const { id } = useParams();
-  const { setIsAnsQuesOpen, setIsLoginOpen, setIsEditQuesOpen, setIsDeleteQuesOpen } = useDialogStore();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const {
+    setIsAnsQuesOpen,
+    setIsLoginOpen,
+    setIsEditQuesOpen,
+    setIsDeleteQuesOpen,
+  } = useDialogStore();
   const user = useAuthStore((state) => state.user);
   const {
     data: post,
@@ -41,9 +50,34 @@ const PostDetail = () => {
       }),
   });
   const [isActionsOpen, setIsActionsOpen] = useState(false);
-
+  const [isReportOpen, setIsReportOpen] = useState(false);
   const sanitizedDescription = DOMPurify.sanitize(post?.description || "");
-
+  const hasReported = post?.reportedBy.some(
+    (report) => report.userId === user?._id
+  );
+  async function handleUnReport() {
+    try {
+      const res = await apiRequest.put(`questions/report/${id}`);
+      if (res.data.message === "Question Unreported") {
+        queryClient.invalidateQueries({ queryKey: [`post.${id}`] });
+        toast({ title: res.data.message });
+        setIsActionsOpen(false);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Couldn't Unreport Question",
+          description: "Please try again.",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: "Please try again!",
+      });
+      console.log(error);
+    }
+  }
   return (
     <div className="pt-2 w-full flex flex-col gap-4">
       {isLoading ? (
@@ -51,7 +85,11 @@ const PostDetail = () => {
       ) : error ? (
         <Retry refetch={refetch} />
       ) : (
-        <section className="p-4 w-full flex flex-col gap-2 bg-white border-1 border-gray-300">
+        <section
+          className={`p-4 w-full flex flex-col gap-2 bg-white ${
+            hasReported ? "border-1 border-red-500 opacity-70" : "border-1 border-gray-300"
+          } `}
+        >
           {/* User, Action */}
           <div className="pb-2 flex items-center justify-between  gap-2  border-b-1 border-gray-200">
             {/* User */}
@@ -95,17 +133,34 @@ const PostDetail = () => {
               <PopoverContent className="absolute -right-1 flex flex-col gap-3 max-w-fit">
                 {user?._id === post?.userId._id ? (
                   <>
-                    <div onClick={()=>setIsEditQuesOpen(true)} className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
+                    <div
+                      onClick={() => setIsEditQuesOpen(true)}
+                      className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
+                    >
                       <RiEditLine className=" w-5 h-5" />
                       <p>Edit</p>
                     </div>
-                    <div onClick={()=>setIsDeleteQuesOpen(true)} className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600">
+                    <div
+                      onClick={() => setIsDeleteQuesOpen(true)}
+                      className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-red-600"
+                    >
                       <RiDeleteBin6Line className=" w-5 h-5" />
                       <p>Delete</p>
                     </div>
                   </>
+                ) : hasReported ? (
+                  <div
+                    onClick={handleUnReport}
+                    className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
+                  >
+                    <RiFlagLine className=" w-5 h-5" />
+                    <p className=" whitespace-nowrap">Withdraw Report</p>
+                  </div>
                 ) : (
-                  <div className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black">
+                  <div
+                    onClick={() => setIsReportOpen(true)}
+                    className="cursor-pointer flex items-center gap-4 text-gray-400 hover:text-black"
+                  >
                     <RiFlagLine className=" w-5 h-5" />
                     <p className=" whitespace-nowrap">Report Post</p>
                   </div>
@@ -113,9 +168,13 @@ const PostDetail = () => {
               </PopoverContent>
             </Popover>
           </div>
-          {/* Edit Dialog & Delete Action */}
-          <EditDialog eTitle={post?.title || ""} eDescription={post?.description || ""}  />
+          {/* Edit Dialog, Delete Action, Report Action */}
+          <EditDialog
+            eTitle={post?.title || ""}
+            eDescription={post?.description || ""}
+          />
           <DeleteAlertDialog />
+          <ReportDialog isOpen={isReportOpen} setIsOpen={setIsReportOpen} />
           {/* Category & Title */}
           <div className=" space-y-1 ">
             <div
@@ -149,14 +208,25 @@ const PostDetail = () => {
               isDownvoted={new Map(Object.entries(post?.isDownvoted || {}))}
             />
             <Button
-              onClick={user ? () => setIsAnsQuesOpen(true) : ()=> setIsLoginOpen(true) }
+              onClick={
+                user ? () => setIsAnsQuesOpen(true) : () => setIsLoginOpen(true)
+              }
               variant={"outline"}
               aria-label="Add Answer"
               className=" text-gray-600 border-gray-400 hover:border-gray-500"
             >
               Answer
             </Button>
-            {post && <AnswerDialog title={post.title} user={{username: post.userId.username, profileImg: post.userId.profileImg}} date={post.createdAt} />}
+            {post && (
+              <AnswerDialog
+                title={post.title}
+                user={{
+                  username: post.userId.username,
+                  profileImg: post.userId.profileImg,
+                }}
+                date={post.createdAt}
+              />
+            )}
           </div>
         </section>
       )}
