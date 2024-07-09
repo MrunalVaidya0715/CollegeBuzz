@@ -26,7 +26,7 @@ export interface Post {
   downvote: number;
   isDownvoted: Map<string, boolean>;
   report: number;
-  reportedBy: string[];
+  reportedBy: { userId: string, reason: string }[];
   answers: string[];
   embedding?: number[];
   createdAt: string;
