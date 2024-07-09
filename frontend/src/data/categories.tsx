@@ -71,3 +71,35 @@ export const BgColors = [
   "#ff00ff", // fuchia
   "#0000ff", // blue
 ];
+
+
+export const ReportReasons = [
+  {
+    id: 1,
+    reason: "Spam: This question contains promotional or irrelevant content."
+  },
+  {
+    id: 2,
+    reason: "Inappropriate Language: This question includes offensive or abusive language."
+  },
+  {
+    id: 3,
+    reason: "Off-topic: This question is not related to the subject or forum category."
+  },
+  {
+    id: 4,
+    reason: "Plagiarism: This question appears to be copied from another source without proper attribution."
+  },
+  {
+    id: 5,
+    reason: "Duplicate: This question has already been asked and answered in the forum."
+  },
+  {
+    id: 6,
+    reason: "Harassment: This question targets or harasses an individual or group."
+  },
+  {
+    id: 7,
+    reason: "Other"
+  },
+]
