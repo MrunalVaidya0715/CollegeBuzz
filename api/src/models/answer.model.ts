@@ -11,7 +11,7 @@ interface IAnswer extends Document {
   downvote: number;
   isDownvoted: Map<string, boolean>;
   report: number;
-  reportedBy: mongoose.Types.ObjectId[];
+  reportedBy: { userId: mongoose.Types.ObjectId, reason: string }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -63,8 +63,14 @@ const answerSchema: Schema<IAnswer> = new Schema(
     },
     reportedBy: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'User',
+        },
+        reason: {
+          type: String,
+          required: true,
+        }
       }
     ],
   },
