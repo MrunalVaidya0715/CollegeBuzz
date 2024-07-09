@@ -102,7 +102,7 @@ export const getQuestions = async (
       filter.category = category;
     }
 
-    let sortOptions: any = { createdAt: -1 }; 
+    let sortOptions: any = { createdAt: -1 };
 
     switch (sortBy) {
       case "oldest":
@@ -364,7 +364,6 @@ export const deleteQuestion = async (
   }
 };
 
-
 export const getQuestionsToContribute = async (
   req: Request,
   res: Response,
@@ -425,7 +424,7 @@ export const getQuestionsToContribute = async (
       },
       {
         $match: {
-          answers: { $exists: true, $size: 0 }, 
+          answers: { $exists: true, $size: 0 },
         },
       },
     ]);
@@ -443,9 +442,48 @@ export const getUserQuestions = async (
 ) => {
   try {
     const userId = req.userId;
-    const questions = await Question.find({userId: userId}).select("-embedding").populate("userId").sort({createdAt: -1});
+    const questions = await Question.find({ userId: userId })
+      .select("-embedding")
+      .populate("userId")
+      .sort({ createdAt: -1 });
     res.status(200).send(questions);
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
+
+export const handleQuestionReport = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const quesId = req.params.id;
+    const userId = req.userId;
+    if (!userId) {
+      return next(createError(401, "UserId is required"));
+    }
+    const { reason } = req.body;
+    const question = await Question.findById(quesId);
+    if (!question) {
+      return next(createError(404, "Question not found"));
+    }
+    let isPresent = question.reportedBy.some((report) => report.userId.toString() === userId);
+    if (isPresent) {
+      question.reportedBy = question.reportedBy.filter(
+        (report) => report.userId.toString() !== userId
+      );
+      question.report -= 1;
+    } else {
+      question.reportedBy.push({ userId: new mongoose.Types.ObjectId(userId), reason });
+      question.report += 1;
+    }
+    await question.save();
+    res.status(200).send({ message: `${isPresent ? "Question Unreported" : "Question Reported"}` });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//handle Delete Answer.many when deleteQustion
+//for getQuestions just select required fields
