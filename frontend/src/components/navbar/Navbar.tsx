@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { BiSearch } from "react-icons/bi";
 import { MdOutlineLogout } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { Button } from "../ui/button";
@@ -16,16 +15,14 @@ import apiRequest from "@/lib/apiRequest";
 import useAuthStore from "@/store/useAuth";
 import { useToast } from "../ui/use-toast";
 import useDialogStore from "@/store/useDialogStore";
+import Search from "./Search";
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
-  const isLoginOpen = useDialogStore((state)=>state.isLoginOpen);
-  const setIsLoginOpen = useDialogStore((state)=>state.setIsLoginOpen);
+  const isLoginOpen = useDialogStore((state) => state.isLoginOpen);
+  const setIsLoginOpen = useDialogStore((state) => state.setIsLoginOpen);
   const clearUser = useAuthStore((state) => state.clearUser);
-  const [searchText, setSearchText] = useState("");
-  const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-  };
+  
   const [isPopOpen, setIsPopOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -60,16 +57,8 @@ const Navbar = () => {
           </h1>
         </Link>
         {/* Search */}
-        <div className="absolute left-1/2 -translate-x-1/2 px-2 py-1 h-9 flex items-center gap-2 text-gray-400 bg-gray-100 border-1 border-gray-200  rounded-lg">
-          <BiSearch className=" text-[20px] md:text-[22px]" />
-          <input
-            value={searchText}
-            onChange={handleSearchTextChange}
-            className="p-1 text-black text-sm md:text-base w-full bg-transparent outline-none rounded-md"
-            type="text"
-            placeholder="Search by title"
-          />
-        </div>
+        <Search />
+
         {/* Login/User */}
         <section>
           {user ? (
@@ -105,7 +94,10 @@ const Navbar = () => {
                       </Link>
                     ))}
 
-                    <Link onClick={() => setIsPopOpen(false)} to={`/profile/${user._id}`}>
+                    <Link
+                      onClick={() => setIsPopOpen(false)}
+                      to={`/profile/${user._id}`}
+                    >
                       <li className=" group p-2 text-sm md:text-base font-medium w-full hover:bg-gray-100 flex gap-2 text-gray-400 items-center transition-all duration-200 ease-in-out">
                         <span className="group-hover:text-gray-800">
                           <CgProfile size={22} />
