@@ -495,4 +495,32 @@ export const handleQuestionReport = async (
 };
 
 //handle Delete Answer.many when deleteQustion
-//for getQuestions just select required fields
+
+export const getQuestionsBySearch = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { keyword } = req.query;
+    if (!keyword) {
+      return res.status(200).json([]);
+    }
+
+    const filter: any = { };
+    if (keyword) {
+      filter.$or = [
+        { title: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+        { branch: { $regex: keyword, $options: "i" } },
+        { category: { $regex: keyword, $options: "i" } },
+      ];
+    }
+
+    const questions = await Question.find(filter)
+      .select(" title category branch")
+    res.status(200).send(questions);
+  } catch (error) {
+    next(error);
+  }
+};
