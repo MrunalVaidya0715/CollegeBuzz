@@ -22,6 +22,7 @@ const TopQuestions = () => {
       apiRequest.get(`questions/top-questions`).then((res) => {
         return res.data;
       }),
+      staleTime: 10 * 60 * 1000
   });
   return (
     <section className="py-4 pl-3 pr-2 w-full h-auto flex flex-col gap-4 bg-white border-1 border-gray-200">
