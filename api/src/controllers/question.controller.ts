@@ -4,6 +4,7 @@ import Question from "../models/question.model";
 import { CustomRequest } from "../middleware/jwt";
 import createError from "../utils/createError";
 import mongoose from "mongoose";
+import Answer from "../models/answer.model";
 
 export const embedQuestion = async (
   req: Request,
@@ -373,6 +374,7 @@ export const deleteQuestion = async (
     if (question.userId.toString() !== userId) {
       return next(createError(403, "Only Question owner can delete"));
     }
+    await Answer.deleteMany({questionId: quesId});
 
     await Question.findByIdAndDelete(quesId);
 
@@ -517,8 +519,6 @@ export const handleQuestionReport = async (
     next(error);
   }
 };
-
-//handle Delete Answer.many when deleteQustion
 
 export const getQuestionsBySearch = async (
   req: Request,
