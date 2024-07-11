@@ -90,8 +90,13 @@ export const getQuestions = async (
   next: NextFunction
 ) => {
   try {
-    const { branch = "All", category = "all", sortBy = "latest" } = req.query;
-
+    const {
+      branch = "All",
+      category = "all",
+      sortBy = "latest",
+      page,
+    } = req.query;
+    const limit = 4;
     const filter: any = {};
 
     if (branch !== "All") {
@@ -118,6 +123,8 @@ export const getQuestions = async (
         break;
     }
 
+    const pageNumber = parseInt(page as string, 10) || 1;
+
     const questions = await Question.aggregate([
       { $match: filter },
       {
@@ -133,7 +140,7 @@ export const getQuestions = async (
           isDownvoted: 0,
           report: 0,
           reportedBy: 0,
-          answers: 0
+          answers: 0,
         },
       },
       {
@@ -147,9 +154,17 @@ export const getQuestions = async (
       {
         $unwind: "$userId",
       },
+      { $skip: (pageNumber - 1) * limit },
+      { $limit: limit },
     ]);
+    const totalQuestions = await Question.countDocuments(filter);
+    const totalPages = Math.ceil(totalQuestions / limit);
 
-    res.status(200).send(questions);
+    res.status(200).send({
+      questions,
+      totalPages: totalPages,
+      currentPage: pageNumber,
+    });
   } catch (error) {
     next(error);
   }
@@ -417,7 +432,7 @@ export const getQuestionsToContribute = async (
           report: 0,
           reportedBy: 0,
           isUpvoted: 0,
-          isDownvoted: 0
+          isDownvoted: 0,
         },
       },
       {
@@ -477,18 +492,27 @@ export const handleQuestionReport = async (
     if (!question) {
       return next(createError(404, "Question not found"));
     }
-    let isPresent = question.reportedBy.some((report) => report.userId.toString() === userId);
+    let isPresent = question.reportedBy.some(
+      (report) => report.userId.toString() === userId
+    );
     if (isPresent) {
       question.reportedBy = question.reportedBy.filter(
         (report) => report.userId.toString() !== userId
       );
       question.report -= 1;
     } else {
-      question.reportedBy.push({ userId: new mongoose.Types.ObjectId(userId), reason });
+      question.reportedBy.push({
+        userId: new mongoose.Types.ObjectId(userId),
+        reason,
+      });
       question.report += 1;
     }
     await question.save();
-    res.status(200).send({ message: `${isPresent ? "Question Unreported" : "Question Reported"}` });
+    res
+      .status(200)
+      .send({
+        message: `${isPresent ? "Question Unreported" : "Question Reported"}`,
+      });
   } catch (error) {
     next(error);
   }
@@ -507,7 +531,7 @@ export const getQuestionsBySearch = async (
       return res.status(200).json([]);
     }
 
-    const filter: any = { };
+    const filter: any = {};
     if (keyword) {
       filter.$or = [
         { title: { $regex: keyword, $options: "i" } },
@@ -517,8 +541,9 @@ export const getQuestionsBySearch = async (
       ];
     }
 
-    const questions = await Question.find(filter)
-      .select(" title category branch")
+    const questions = await Question.find(filter).select(
+      " title category branch"
+    );
     res.status(200).send(questions);
   } catch (error) {
     next(error);
