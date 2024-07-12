@@ -12,6 +12,7 @@ import { Toaster } from "./components/ui/toaster";
 import Contribute from "./pages/contribute/Contribute";
 import MyQuestions from "./pages/my-questions/MyQuestions";
 import Profile from "./pages/profile/Profile";
+import AskButton from "./components/ask-button/AskButton";
 
 function App() {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -22,6 +23,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <GoogleOAuthProvider clientId={clientId}>
             <Navbar />
+            <AskButton />
             <main className="w-full min-h-dvh flex flex-col items-center justify-between ">
               <Routes>
                 <Route path="/" element={<Home />}>
