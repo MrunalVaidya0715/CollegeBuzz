@@ -42,7 +42,7 @@ const Section = () => {
       </div>
       <Button
         onClick={handleAskQuestion}
-        className=" bg-blue-600 hover:bg-blue-800 gap-2"
+        className="hidden md:flex bg-blue-600 hover:bg-blue-800 gap-2"
         aria-label="Ask Question"
       >
         <IoMdAdd className=" w-5 h-5" />
