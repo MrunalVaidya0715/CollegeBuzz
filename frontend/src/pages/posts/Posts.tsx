@@ -99,11 +99,13 @@ const Posts = () => {
           {posts.map((post) => (
             <PostCard key={post._id} post={post} />
           ))}
-          <div ref={ref} className=" mx-auto my-6">
-            {isFetchingNextPage && (
-              <LucideLoaderCircle className=" w-5 h-5 text-blue-600 animate-spin" />
-            )}
-          </div>
+          {hasNextPage && (
+            <div ref={ref} className=" mx-auto my-6">
+              {isFetchingNextPage && (
+                <LucideLoaderCircle className=" w-5 h-5 text-blue-600 animate-spin" />
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>
