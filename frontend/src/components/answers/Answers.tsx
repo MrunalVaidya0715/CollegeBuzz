@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import Retry from "../queryStates/Retry";
 import NoData from "../queryStates/NoData";
+import AnswerSummary from "./AnswerSummary";
 
 export interface Answer {
   _id: string;
@@ -27,7 +28,6 @@ export interface Answer {
   updatedAt: string;
   __v: number;
 }
-
 const Answers = () => {
   const { id } = useParams();
   const {
@@ -37,27 +37,28 @@ const Answers = () => {
     refetch,
   } = useQuery<Answer[]>({
     queryKey: [`answers.${id}`],
-    queryFn: () =>
-      apiRequest.get(`answers/${id}`).then((res) => {
-        return res.data;
-      }),
+    queryFn: () => apiRequest.get(`answers/${id}`).then((res) => res.data),
   });
+  
   return (
-    <section className=" w-full flex flex-col gap-2">
-      {isLoading ? (
-        Array(2)
-          .fill(null)
-          .map((_, index) => <AnswersSkeleton key={index} />)
-      ) : error ? (
-        <Retry refetch={refetch} />
-      ) : answers?.length === 0 ? (
-        <NoData message="No Answers yet" className=" min-h-[100px]" />
-      ) : (
-        answers?.map((answer) => (
-          <AnswerCard key={answer._id} answer={answer} />
-        ))
-      )}
-    </section>
+    <>
+      <AnswerSummary answers={answers || []} />
+      <section className="w-full flex flex-col gap-2">
+        {isLoading ? (
+          Array.from({ length: 2 }, (_, index) => (
+            <AnswersSkeleton key={index} />
+          ))
+        ) : error ? (
+          <Retry refetch={refetch} />
+        ) : answers?.length === 0 ? (
+          <NoData message="No Answers yet" className="min-h-[100px]" />
+        ) : (
+          answers?.map((answer) => (
+            <AnswerCard key={answer._id} answer={answer} />
+          ))
+        )}
+      </section>
+    </>
   );
 };
 
