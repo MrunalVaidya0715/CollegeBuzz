@@ -1,8 +1,9 @@
 import { Router } from 'express'
 import { verifyToken } from '../middleware/jwt';
-import { createAnswer, deleteAnswer, editAnswer, getAnswers, handleAnswerReport, handleDownVote, handleUpVote } from '../controllers/answer.controller';
+import { answerSummary, createAnswer, deleteAnswer, editAnswer, getAnswers, handleAnswerReport, handleDownVote, handleUpVote } from '../controllers/answer.controller';
 const router  = Router()
 
+router.post('/answer-summary', answerSummary);
 router.post('/add-answer/:id', verifyToken, createAnswer);
 router.put('/upvote/:id', verifyToken, handleUpVote);
 router.put('/downvote/:id', verifyToken, handleDownVote);

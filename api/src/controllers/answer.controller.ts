@@ -4,6 +4,7 @@ import Answer from "../models/answer.model";
 import Question from "../models/question.model";
 import createError from "../utils/createError";
 import mongoose from "mongoose";
+import createSummary from "../utils/createSummary";
 
 export const createAnswer = async (
   req: CustomRequest,
@@ -244,18 +245,41 @@ export const handleAnswerReport = async (
     if (!answer) {
       return next(createError(404, "Answer not found"));
     }
-    let isPresent = answer.reportedBy.some((report) => report.userId.toString() === userId);
+    let isPresent = answer.reportedBy.some(
+      (report) => report.userId.toString() === userId
+    );
     if (isPresent) {
       answer.reportedBy = answer.reportedBy.filter(
         (report) => report.userId.toString() !== userId
       );
       answer.report -= 1;
     } else {
-      answer.reportedBy.push({ userId: new mongoose.Types.ObjectId(userId), reason });
+      answer.reportedBy.push({
+        userId: new mongoose.Types.ObjectId(userId),
+        reason,
+      });
       answer.report += 1;
     }
     await answer.save();
-    res.status(200).send({ message: `${isPresent ? "Answer Unreported" : "Answer Reported"}` });
+    res
+      .status(200)
+      .send({
+        message: `${isPresent ? "Answer Unreported" : "Answer Reported"}`,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const answerSummary = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { answers } = req.body;
+    const summarRes = await createSummary(answers);
+    res.status(200).send(summarRes);
   } catch (error) {
     next(error);
   }
