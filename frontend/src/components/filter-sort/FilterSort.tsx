@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { FilterOptions } from "@/data/links";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useQuestionFilterStore from "@/store/useFilterSortStore";
 
 const FilterSort = () => {
@@ -19,6 +19,19 @@ const FilterSort = () => {
   const sortQuery = searchParams.get("sortBy") || sortBy;
   const [selectedCategory, setSelectedCategory] = useState(catQuery);
   const [selectedSortBy, setSelectedSortBy] = useState(sortQuery);
+  useEffect(() => {
+    if (category !== catQuery) {
+      setSelectedCategory(catQuery);
+      setCategory(catQuery);
+    }
+  }, [catQuery, category, setCategory]);
+
+  useEffect(() => {
+    if (sortBy !== sortQuery) {
+      setSelectedSortBy(sortQuery);
+      setSortBy(sortQuery);
+    }
+  }, [sortQuery, sortBy, setSortBy]);
   const handleCatQueryChange = (cat: string) => {
     setCategory(cat);
     setSelectedCategory(cat);
@@ -50,7 +63,7 @@ const FilterSort = () => {
           <BsFilterLeft className="w-5 h-5" />
           <p className="hidden lg:block text-sm">Filter</p>
         </div>
-        <Select value={selectedCategory} onValueChange={handleCatQueryChange}>
+        <Select value={catQuery} onValueChange={handleCatQueryChange}>
           <SelectTrigger className="w-full" aria-label="Filter Category">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
