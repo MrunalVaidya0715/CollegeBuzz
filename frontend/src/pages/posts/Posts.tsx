@@ -8,6 +8,7 @@ import apiRequest from "@/lib/apiRequest";
 import PostCardSkeleton from "@/components/skeletons/PostCardSkeleton";
 import useQuestionFilterStore from "@/store/useFilterSortStore";
 import { LucideLoaderCircle } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 interface UserId {
   _id: string;
@@ -44,8 +45,9 @@ interface PostFetched {
 
 const Posts = () => {
   const { category, sortBy } = useQuestionFilterStore();
-  const catQuery = category;
-  const sortQuery = sortBy;
+  const [searchParams] = useSearchParams();
+  const catQuery = searchParams.get("category") || category;
+  const sortQuery = searchParams.get("sortBy") || sortBy;
   const { ref, inView } = useInView({ threshold: 1 });
   const fetchPosts = async ({ pageParam = 1 }) => {
     const res = await apiRequest.get(
