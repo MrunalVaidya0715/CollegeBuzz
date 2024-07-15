@@ -7,9 +7,11 @@ import useQuestionFilterStore from "@/store/useFilterSortStore";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect} from "react";
 import { Post } from "../posts/Posts";
+import useFilterBranchStore from "@/store/useFilterBranchStore";
 
 const Contribute = () => {
   const { category, sortBy } = useQuestionFilterStore();
+  const { branch } = useFilterBranchStore();
   const catQuery = category;
   const sortQuery =  sortBy;
 
@@ -23,14 +25,14 @@ const Contribute = () => {
     queryKey: ["contribute"],
     queryFn: () =>
       apiRequest
-        .get(`questions/contribute?category=${catQuery}&sortBy=${sortQuery}`)
+        .get(`questions/contribute?branch=${branch}&category=${catQuery}&sortBy=${sortQuery}`)
         .then((res) => {
           return res.data;
         }),
   });
   useEffect(() => {
     refetch();
-  }, [catQuery, sortQuery, refetch]);
+  }, [catQuery, sortQuery, branch, refetch]);
   return (
     <div className="w-full flex flex-col gap-4">
       {isLoading || isRefetching ? (

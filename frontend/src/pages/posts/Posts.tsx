@@ -9,6 +9,7 @@ import PostCardSkeleton from "@/components/skeletons/PostCardSkeleton";
 import useQuestionFilterStore from "@/store/useFilterSortStore";
 import { LucideLoaderCircle } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import useFilterBranchStore from "@/store/useFilterBranchStore";
 
 interface UserId {
   _id: string;
@@ -45,13 +46,14 @@ interface PostFetched {
 
 const Posts = () => {
   const { category, sortBy } = useQuestionFilterStore();
+  const {branch} = useFilterBranchStore();
   const [searchParams] = useSearchParams();
   const catQuery = searchParams.get("category") || category;
   const sortQuery = searchParams.get("sortBy") || sortBy;
   const { ref, inView } = useInView({ threshold: 1 });
   const fetchPosts = async ({ pageParam = 1 }) => {
     const res = await apiRequest.get(
-      `questions?category=${catQuery}&sortBy=${sortQuery}&page=${pageParam}`
+      `questions?branch=${branch}&category=${catQuery}&sortBy=${sortQuery}&page=${pageParam}`
     );
     return res.data as PostFetched;
   };
@@ -77,7 +79,7 @@ const Posts = () => {
   });
   useEffect(() => {
     refetch();
-  }, [catQuery, sortQuery, refetch]);
+  }, [catQuery, sortQuery, branch, refetch]);
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
