@@ -16,13 +16,14 @@ import useAuthStore from "@/store/useAuth";
 import { useToast } from "../ui/use-toast";
 import useDialogStore from "@/store/useDialogStore";
 import Search from "./Search";
+import BranchFilter from "./BranchFilter";
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
   const isLoginOpen = useDialogStore((state) => state.isLoginOpen);
   const setIsLoginOpen = useDialogStore((state) => state.setIsLoginOpen);
   const clearUser = useAuthStore((state) => state.clearUser);
-  
+
   const [isPopOpen, setIsPopOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -47,18 +48,21 @@ const Navbar = () => {
   return (
     <header className="z-[100] fixed top-0 left-0 h-16 w-screen flex justify-center bg-white border-b-1 border-gray-300 shadow-md">
       <nav className="relative p-2 w-full h-full max-w-[1200px] flex items-center justify-between">
-        {/* Logo */}
-        <Link to={"/"} aria-label="CollegeBuzz Home">
-          <h1 className="flex text-lg font-bold">
-            C<span className="hidden sm:block">ollege</span>
-            <span className=" text-blue-600 flex">
-              B<span className="hidden sm:block">uzz</span>
-            </span>
-          </h1>
-        </Link>
+        <section className="flex gap-4 items-center">
+          {/* Logo */}
+          <Link to={"/"} aria-label="CollegeBuzz Home">
+            <h1 className="flex text-lg font-bold">
+              C<span className="hidden sm:block">ollege</span>
+              <span className=" text-blue-600 flex">
+                B<span className="hidden sm:block">uzz</span>
+              </span>
+            </h1>
+          </Link>
+          {/* Branch */}
+          <BranchFilter />
+        </section>
         {/* Search */}
         <Search />
-
         {/* Login/User */}
         <section>
           {user ? (
