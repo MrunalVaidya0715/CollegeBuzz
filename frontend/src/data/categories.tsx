@@ -134,3 +134,27 @@ export const ReportAnswersReasons = [
     reason: "Other"
   },
 ]
+
+
+export const filterBranches = [
+  {
+    id: 1,
+    value: "All",
+  },
+  {
+    id: 2,
+    value: "CS",
+  },
+  {
+    id: 3,
+    value: "CSE",
+  },
+  {
+    id: 4,
+    value: "IT",
+  },
+  {
+    id: 5,
+    value: "EXTC",
+  },
+]
